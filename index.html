@@ -821,46 +821,55 @@
         }
 
         async function fetchHotelRates(startDate, endDate) {
-            const url = `https://xeitj4h9fd.execute-api.us-east-1.amazonaws.com/prd/desbravador?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`;
+    // As datas já vêm no formato DD/MM/AAAA da função formatDateToDDMMAAAA
+    // Mas precisamos garantir o encoding correto para a API AWS
+    
+    // Formatar datas para o padrão da API AWS: DD%2FMM%2FAAAA
+    const formattedStart = startDate.replace(/\//g, '%2F');
+    const formattedEnd = endDate.replace(/\//g, '%2F');
 
-            try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Basic Og==',
-                        'Content-Type': 'application/json'
-                    }
-                });
+    const url = `https://xeitj4h9fd.execute-api.us-east-1.amazonaws.com/prd/desbravador?start=${formattedStart}&end=${formattedEnd}`;
 
-                if (!response.ok) {
-                    throw new Error(`Erro na consulta: ${response.status}`);
-                }
+    console.log('🔍 URL da API AWS:', url); // Debug
 
-                const data = await response.json();
-
-                if (!data.data || !data.data.dataFormatted || !Array.isArray(data.data.dataFormatted)) {
-                    throw new Error('Formato de dados inválido retornado pela API');
-                }
-
-                // Aplica desconto de 5% em todos os valores retornados
-                data.data.dataFormatted = data.data.dataFormatted.map(room => {
-                    const valorMedio = convertCurrencyToNumber(room.valorMedio || room.total);
-                    const total = convertCurrencyToNumber(room.total);
-
-                    return {
-                        ...room,
-                        valorMedio: valorMedio,
-                        total: total
-                    };
-                });
-
-                return data;
-            } catch (error) {
-                console.error('Erro na API de tarifas:', error);
-                throw new Error('Erro ao consultar tarifas. Por favor, tente novamente.');
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Basic Og==',
+                'Content-Type': 'application/json'
             }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro na consulta: ${response.status} - ${response.statusText}`);
         }
 
+        const data = await response.json();
+        console.log('📦 Resposta da API AWS:', data); // Debug
+
+        if (!data.data || !data.data.dataFormatted || !Array.isArray(data.data.dataFormatted)) {
+            throw new Error('Formato de dados inválido retornado pela API');
+        }
+
+        // Aplica desconto de 5% em todos os valores retornados
+        data.data.dataFormatted = data.data.dataFormatted.map(room => {
+            const valorMedio = convertCurrencyToNumber(room.valorMedio || room.total);
+            const total = convertCurrencyToNumber(room.total);
+
+            return {
+                ...room,
+                valorMedio: valorMedio * 0.95, // 5% de desconto
+                total: total * 0.95 // 5% de desconto
+            };
+        });
+
+        return data;
+    } catch (error) {
+        console.error('❌ Erro na API de tarifas:', error);
+        throw new Error('Erro ao consultar tarifas. Por favor, tente novamente.');
+    }
+}
         // Variáveis globais
         let conversationHistory = [];
         let currentQuoteData = null;

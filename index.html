@@ -825,11 +825,9 @@ const MINLOS_DATA = {
         return availabilityCache[cacheKey];
     }
 
-    // Diferentes proxies CORS para tentar
+    // Usando o seu proxy privado do Cloudflare Workers para máxima estabilidade
     const proxies = [
-        { url: 'https://api.allorigins.win/get?url=', type: 'allorigins' },
-        { url: 'https://corsproxy.io/?', type: 'direct' },
-        { url: 'https://thingproxy.freeboard.io/fetch/', type: 'direct' }
+        { url: 'https://broken-hall-6760.paulo-migueoli.workers.dev/', type: 'direct' }
     ];
 
     let lastError;

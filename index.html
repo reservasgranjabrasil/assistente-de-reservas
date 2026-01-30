@@ -827,8 +827,9 @@ const MINLOS_DATA = {
 
     // Diferentes proxies CORS para tentar
     const proxies = [
-        'https://api.allorigins.win/raw?url=',
-        'https://corsproxy.io/?'
+        { url: 'https://api.allorigins.win/get?url=', type: 'allorigins' },
+        { url: 'https://corsproxy.io/?', type: 'direct' },
+        { url: 'https://thingproxy.freeboard.io/fetch/', type: 'direct' }
     ];
 
     let lastError;
@@ -836,8 +837,13 @@ const MINLOS_DATA = {
     for (const proxy of proxies) {
         try {
             const targetUrl = 'https://reservas.desbravador.com.br/reservas/modules/ws/interface.php';
-            const encodedUrl = encodeURIComponent(targetUrl);
-            const fullUrl = proxy + encodedUrl;
+            let fullUrl;
+            
+            if (proxy.type === 'allorigins') {
+                fullUrl = proxy.url + encodeURIComponent(targetUrl);
+            } else {
+                fullUrl = proxy.url + targetUrl;
+            }
 
             const payload = {
                 "wsrolRQ": {
@@ -857,28 +863,51 @@ const MINLOS_DATA = {
                 }
             };
 
-            const response = await fetch(fullUrl, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Basic cm9sRHNsOkJyNDVpMUAyMDE4',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro na consulta de disponibilidade: ${response.status}`);
+            let response;
+            if (proxy.type === 'allorigins') {
+                // AllOrigins 'get' endpoint embrulha a resposta em um JSON
+                response = await fetch(fullUrl, {
+                    method: 'POST', // AllOrigins aceita POST para o endpoint /get mas o trata de forma específica
+                    headers: {
+                        'Authorization': 'Basic cm9sRHNsOkJyNDVpMUAyMDE4',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+            } else {
+                response = await fetch(fullUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Basic cm9sRHNsOkJyNDVpMUAyMDE4',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
             }
 
-            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`Erro ${response.status} no proxy ${proxy.url}`);
+            }
+
+            let data = await response.json();
+            
+            // Se for AllOrigins, o conteúdo real está dentro de data.contents
+            if (proxy.type === 'allorigins' && data.contents) {
+                try {
+                    data = JSON.parse(data.contents);
+                } catch (e) {
+                    // Se não for JSON, pode ser a resposta direta
+                }
+            }
+
             availabilityCache[cacheKey] = data;
             return data;
 
         } catch (error) {
-            console.error(`Proxy ${proxy} falhou:`, error);
+            console.warn(`Tentativa com proxy ${proxy.url} falhou:`, error.message);
             lastError = error;
-            continue; // Tenta o próximo proxy
+            continue;
         }
     }
 

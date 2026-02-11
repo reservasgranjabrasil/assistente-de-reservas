@@ -1034,41 +1034,81 @@ function checkMinLOS(startDateStr, endDateStr) {
             }
         }
 
-        // ========= FUNÇÃO PARA CHAMAR A IA =========
-        async function callHotelAI(message) {
-            try {
-                console.log('Chamando IA para:', message.substring(0, 50) + '...');
-                
-                const response = await fetch('https://intrega-ia.paulo-migueoli.workers.dev/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        prompt: message
-                    })
-                });
+        // ========= FUNÇÃO callHotelAI CORRIGIDA - MANTÉM O MESMO ID =========
+async function callHotelAI(message) {
+    try {
+        console.log('Chamando IA para:', message.substring(0, 50) + '...');
+        
+        // ✅ CORREÇÃO: Verificar e REUTILIZAR o conversation_id existente
+        let conversationId = localStorage.getItem('granja_conversation_id');
+        
+        // ✅ SÓ gera NOVO ID se NÃO EXISTIR nenhum
+        if (!conversationId) {
+            conversationId = `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem('granja_conversation_id', conversationId);
+            console.log('🆔 Novo conversation_id gerado:', conversationId);
+        } else {
+            console.log('🆔 Reutilizando conversation_id existente:', conversationId);
+        }
+        
+        // Histórico APENAS com mensagens anteriores (NÃO incluir a atual)
+        const historyForAPI = conversationHistory
+            .filter(msg => {
+                // Garantir que não estamos enviando a mensagem atual duplicada
+                const isCurrentMessage = msg.isUser && 
+                    typeof msg.content === 'string' && 
+                    msg.content.trim() === message.trim();
+                return !isCurrentMessage;
+            })
+            .map(msg => ({
+                role: msg.isUser ? 'user' : 'assistant',
+                content: typeof msg.content === 'string' ? 
+                    msg.content.replace(/<[^>]*>/g, ' ').substring(0, 1000) : 'Mensagem com formatação',
+                timestamp: msg.timestamp ? msg.timestamp.toISOString() : new Date().toISOString()
+            }));
+        
+        console.log('📤 Enviando para o Worker:', {
+            conversation_id: conversationId,
+            historyLength: historyForAPI.length,
+            prompt: message.substring(0, 30)
+        });
+        
+        const response = await fetch('https://intrega-ia.paulo-migueoli.workers.dev/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: message,
+                conversation_id: conversationId, // ✅ MESMO ID para TODAS as mensagens
+                history: historyForAPI.slice(-20)
+            })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`Erro na API: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    console.log('Resposta IA recebida');
-                    // Formatar a resposta para melhor legibilidade
-                    return formatAIResponse(data.response);
-                } else {
-                    console.error('Erro da API:', data);
-                    return getFallbackResponse(message);
-                }
-            } catch (error) {
-                console.error('Erro ao chamar IA:', error);
-                return getFallbackResponse(message);
-            }
+        if (!response.ok) {
+            throw new Error(`Erro na API: ${response.status}`);
         }
 
+        const data = await response.json();
+        
+        // ✅ Atualizar o ID apenas se o worker retornar um diferente (raro)
+        if (data.conversation_id && data.conversation_id !== conversationId) {
+            console.log('🆔 Atualizando conversation_id:', data.conversation_id);
+            localStorage.setItem('granja_conversation_id', data.conversation_id);
+        }
+        
+        if (data.success) {
+            console.log('✅ Resposta IA recebida');
+            return formatAIResponse(data.response);
+        } else {
+            console.error('❌ Erro da API:', data);
+            return getFallbackResponse(message);
+        }
+    } catch (error) {
+        console.error('❌ Erro ao chamar IA:', error);
+        return getFallbackResponse(message);
+    }
+}
         // ========= FUNÇÃO PARA FORMATAR RESPOSTAS DA IA =========
         function formatAIResponse(text) {
             if (!text) return text;
@@ -1162,7 +1202,33 @@ function checkMinLOS(startDateStr, endDateStr) {
             return formattedText;
         }
 
-        // ========= FUNÇÃO PARA ADICIONAR CLICK AOS TELEFONES =========
+// ========= FUNÇÃO PARA EXPORTAR CONVERSA ATUAL =========
+function exportCurrentConversation() {
+    const conversationId = localStorage.getItem('granja_conversation_id') || 'conversa_atual';
+    
+    const exportData = {
+        conversation_id: conversationId,
+        export_date: new Date().toISOString(),
+        messages: conversationHistory.map(msg => ({
+            role: msg.isUser ? 'user' : 'assistant',
+            content: typeof msg.content === 'string' ? 
+                msg.content.replace(/<[^>]*>/g, ' ') : msg.content.outerHTML,
+            timestamp: msg.timestamp
+        }))
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `conversa_${conversationId}_${new Date().toISOString().slice(0,10)}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+
+// ========= FUNÇÃO PARA ADICIONAR CLICK AOS TELEFONES =========
         function setupPhoneClicks() {
             setTimeout(() => {
                 // Encontrar todos os números de telefone na resposta

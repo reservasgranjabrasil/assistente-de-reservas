@@ -591,6 +591,65 @@
         .close-modal:hover {
             color: #bbb;
         }
+
+        /* Estilo para o container de acomodações */
+        .accommodation-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .accommodation-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .accommodation-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .accommodation-content {
+            padding: 15px;
+        }
+
+        .accommodation-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .feature-column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .video-button-accommodation {
+            background: #075e54;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s;
+        }
+
+        .video-button-accommodation:hover {
+            background: #128c7e;
+        }
         /* ===== FIM DOS NOVOS ESTILOS ===== */
 
         @media (min-width: 768px) {
@@ -2808,6 +2867,7 @@ Atenciosamente,
                                         🛏️
                                     </div>
                                     <h4 style="margin: 0; color: #075e54;">Apartamento Superior</h4>
+                                    <button class="video-button" onclick="openVideoModal('Apartamento Superior.mp4')">▶ ver vídeo</button>
                                 </div>
 
                                 <div style="display: flex; flex-wrap: wrap; gap: 15px;">
@@ -2843,6 +2903,7 @@ Atenciosamente,
                                         🛋️
                                     </div>
                                     <h4 style="margin: 0; color: #075e54;">Suíte Sênior</h4>
+                                    <button class="video-button" onclick="openVideoModal('Suíte Sênior.mp4')">▶ ver vídeo</button>
                                 </div>
 
                                 <div style="display: flex; flex-wrap: wrap; gap: 15px;">
@@ -2882,6 +2943,7 @@ Atenciosamente,
                                         🌟
                                     </div>
                                     <h4 style="margin: 0; color: #075e54;">Suíte Master (Cobertura)</h4>
+                                    <button class="video-button" onclick="openVideoModal('Suíte Máster.mp4')">▶ ver vídeo</button>
                                 </div>
 
                                 <div style="display: flex; flex-wrap: wrap; gap: 15px;">
@@ -2995,6 +3057,7 @@ Atenciosamente,
                                                 🛏️
                                             </div>
                                             <h4 style="margin: 0; color: #075e54;">Apartamento Superior</h4>
+                                            <button class="video-button" onclick="openVideoModal('Apartamento Superior.mp4')">▶ ver vídeo</button>
                                         </div>
 
                                         <div style="display: flex; flex-wrap: wrap; gap: 15px;">
@@ -3030,6 +3093,7 @@ Atenciosamente,
                                                 🛋️
                                             </div>
                                             <h4 style="margin: 0; color: #075e54;">Suíte Sênior</h4>
+                                            <button class="video-button" onclick="openVideoModal('Suíte Sênior.mp4')">▶ ver vídeo</button>
                                         </div>
 
                                         <div style="display: flex; flex-wrap: wrap; gap: 15px;">
@@ -3069,6 +3133,7 @@ Atenciosamente,
                                                 🌟
                                             </div>
                                             <h4 style="margin: 0; color: #075e54;">Suíte Master (Cobertura)</h4>
+                                            <button class="video-button" onclick="openVideoModal('Suíte Máster.mp4')">▶ ver vídeo</button>
                                         </div>
 
                                         <div style="display: flex; flex-wrap: wrap; gap: 15px;">
@@ -3286,6 +3351,7 @@ Atenciosamente,
         }
 
         // ===== FUNÇÃO CORRIGIDA: Controle do Modal de Vídeo com reprodução automática =====
+// ===== FUNÇÃO CORRIGIDA: Vídeo inicia em tela cheia automaticamente =====
 let currentVideoElement = null; // Para referência ao vídeo
 
 // Função para abrir o modal com o vídeo
@@ -3301,6 +3367,9 @@ function openVideoModal(videoFileName) {
     const source = video.querySelector('source');
     source.src = videoPath;
     video.load(); // Carrega o novo source
+    
+    modal.style.display = 'block';
+    currentVideoElement = video;
     
     // Adiciona evento para dar play automático quando o vídeo estiver carregado
     video.onloadeddata = function() {
@@ -3329,16 +3398,33 @@ function openVideoModal(videoFileName) {
                 }
             }, 3000);
         });
+        
+        // NOVO: Solicitar tela cheia automaticamente
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) { /* Safari */
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { /* IE11 */
+            video.msRequestFullscreen();
+        }
     };
-    
-    modal.style.display = 'block';
-    currentVideoElement = video;
 }
 
 // Função para fechar o modal
 function closeVideoModal() {
     const modal = document.getElementById('videoModal');
     const video = document.getElementById('modalVideo');
+    
+    // Sair do modo tela cheia se estiver ativo
+    if (document.fullscreenElement) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+            document.msExitFullscreen();
+        }
+    }
     
     if (video) {
         video.pause(); // Pausa o vídeo

@@ -2099,7 +2099,7 @@
             }
         }
 
-        // FUNÇÃO CORRIGIDA - Layout uniforme em todas as telas
+        // FUNÇÃO CORRIGIDA - Sem erro de variável não definida
 function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2, childrenCount) {
     const roomSelectionSection = document.getElementById('roomSelectionSection');
     const quoteResultContainer = document.getElementById('quoteResultContainer');
@@ -2290,14 +2290,37 @@ function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adul
             videoContainer.appendChild(videoBtn);
         }
 
-        // Em telas pequenas, organiza verticalmente
-        if (window.innerWidth <= 480) {
-            bottomRow.style.flexDirection = 'column';
-            bottomRow.style.alignItems = 'flex-start';
-            videoContainer.style.marginTop = '4px';
-            videoContainer.style.width = '100%';
-            if (videoBtn) videoBtn.style.width = '100%';
-        }
+        // Aplicar estilos responsivos baseados no tamanho da tela
+        const applyResponsiveStyles = () => {
+            if (window.innerWidth <= 480) {
+                bottomRow.style.flexDirection = 'column';
+                bottomRow.style.alignItems = 'flex-start';
+                if (videoContainer.children.length > 0) {
+                    videoContainer.style.marginTop = '4px';
+                    videoContainer.style.width = '100%';
+                    const videoBtn = videoContainer.querySelector('button');
+                    if (videoBtn) {
+                        videoBtn.style.width = '100%';
+                        videoBtn.style.justifyContent = 'center';
+                    }
+                }
+            } else {
+                bottomRow.style.flexDirection = 'row';
+                bottomRow.style.alignItems = 'center';
+                if (videoContainer.children.length > 0) {
+                    videoContainer.style.marginTop = '0';
+                    videoContainer.style.width = 'auto';
+                    const videoBtn = videoContainer.querySelector('button');
+                    if (videoBtn) {
+                        videoBtn.style.width = 'auto';
+                        videoBtn.style.justifyContent = 'flex-start';
+                    }
+                }
+            }
+        };
+
+        // Aplicar estilos iniciais
+        applyResponsiveStyles();
 
         bottomRow.appendChild(priceContainer);
         bottomRow.appendChild(videoContainer);
@@ -2345,32 +2368,45 @@ function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adul
     roomSelectionSection.appendChild(addButton);
 
     // Adicionar listener para redimensionamento da janela
-    window.addEventListener('resize', function() {
-        const bottomRows = document.querySelectorAll('#roomsContainer > div > div:nth-child(2) > div:nth-child(2)');
-        bottomRows.forEach(row => {
-            if (window.innerWidth <= 480) {
-                row.style.flexDirection = 'column';
-                row.style.alignItems = 'flex-start';
-                const videoContainer = row.querySelector('div:last-child');
-                if (videoContainer) {
-                    videoContainer.style.marginTop = '4px';
-                    videoContainer.style.width = '100%';
-                    const videoBtn = videoContainer.querySelector('button');
-                    if (videoBtn) videoBtn.style.width = '100%';
-                }
-            } else {
-                row.style.flexDirection = 'row';
-                row.style.alignItems = 'center';
-                const videoContainer = row.querySelector('div:last-child');
-                if (videoContainer) {
-                    videoContainer.style.marginTop = '0';
-                    videoContainer.style.width = 'auto';
-                    const videoBtn = videoContainer.querySelector('button');
-                    if (videoBtn) videoBtn.style.width = 'auto';
+    const handleResize = () => {
+        const roomDivs = document.querySelectorAll('#roomsContainer > div');
+        roomDivs.forEach(roomDiv => {
+            if (roomDiv.id === 'roomsContainer' || roomDiv.tagName === 'P') return;
+            
+            const bottomRow = roomDiv.querySelector('div:nth-child(2) > div:nth-child(2)');
+            const videoContainer = roomDiv.querySelector('div:nth-child(2) > div:nth-child(2) > div:last-child');
+            
+            if (bottomRow) {
+                if (window.innerWidth <= 480) {
+                    bottomRow.style.flexDirection = 'column';
+                    bottomRow.style.alignItems = 'flex-start';
+                    if (videoContainer) {
+                        videoContainer.style.marginTop = '4px';
+                        videoContainer.style.width = '100%';
+                        const videoBtn = videoContainer.querySelector('button');
+                        if (videoBtn) {
+                            videoBtn.style.width = '100%';
+                            videoBtn.style.justifyContent = 'center';
+                        }
+                    }
+                } else {
+                    bottomRow.style.flexDirection = 'row';
+                    bottomRow.style.alignItems = 'center';
+                    if (videoContainer) {
+                        videoContainer.style.marginTop = '0';
+                        videoContainer.style.width = 'auto';
+                        const videoBtn = videoContainer.querySelector('button');
+                        if (videoBtn) {
+                            videoBtn.style.width = 'auto';
+                            videoBtn.style.justifyContent = 'flex-start';
+                        }
+                    }
                 }
             }
         });
-    });
+    };
+
+    window.addEventListener('resize', handleResize);
 }
 
         // FUNÇÃO PARA REMOVER ACOMODAÇÃO DO CARRINHO

@@ -2099,198 +2099,279 @@
             }
         }
 
-        // FUNÇÃO ATUALIZADA - SIMPLIFICADA (apenas valor total por noite)
-        function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2, childrenCount) {
-            const roomSelectionSection = document.getElementById('roomSelectionSection');
-            const quoteResultContainer = document.getElementById('quoteResultContainer');
-            const loadingIndicator = document.getElementById('loadingIndicator');
+        // FUNÇÃO CORRIGIDA - Layout uniforme em todas as telas
+function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2, childrenCount) {
+    const roomSelectionSection = document.getElementById('roomSelectionSection');
+    const quoteResultContainer = document.getElementById('quoteResultContainer');
+    const loadingIndicator = document.getElementById('loadingIndicator');
 
-            loadingIndicator.style.display = 'none';
-            roomSelectionSection.style.display = 'block';
-            quoteResultContainer.style.display = 'none';
+    loadingIndicator.style.display = 'none';
+    roomSelectionSection.style.display = 'block';
+    quoteResultContainer.style.display = 'none';
 
-            const roomsContainer = document.createElement('div');
-            roomsContainer.id = 'roomsContainer';
-            roomsContainer.style.marginBottom = '15px';
+    const roomsContainer = document.createElement('div');
+    roomsContainer.id = 'roomsContainer';
+    roomsContainer.style.marginBottom = '15px';
+    roomsContainer.style.backgroundColor = 'white';
+    roomsContainer.style.borderRadius = '8px';
+    roomsContainer.style.padding = '5px 0';
 
-            roomSelectionSection.innerHTML = '';
-            roomSelectionSection.appendChild(roomsContainer);
+    roomSelectionSection.innerHTML = '';
+    roomSelectionSection.appendChild(roomsContainer);
 
-            const title = document.createElement('p');
-            title.innerHTML = '<strong>Selecione as acomodações desejadas:</strong>';
-            title.style.marginBottom = '15px';
-            title.style.fontSize = '16px';
-            roomsContainer.appendChild(title);
+    const title = document.createElement('p');
+    title.innerHTML = '<strong>Selecione as acomodações desejadas:</strong>';
+    title.style.marginBottom = '15px';
+    title.style.fontSize = '16px';
+    title.style.padding = '0 10px';
+    roomsContainer.appendChild(title);
 
-            const roomTypesInOrder = [
-                { name: "Apartamento Superior", code: "SUP" },
-                { name: "Suíte Sênior", code: "SEN" },
-                { name: "Suíte Master (Cobertura)", code: "MAS" }
-            ];
+    const roomTypesInOrder = [
+        { name: "Apartamento Superior", code: "SUP" },
+        { name: "Suíte Sênior", code: "SEN" },
+        { name: "Suíte Master (Cobertura)", code: "MAS" }
+    ];
 
-            const orderedRooms = [];
-            roomTypesInOrder.forEach(type => {
-                const room = availableRooms.find(r =>
-                    r.descricao.includes(type.name) ||
-                    r.codigo === type.code
-                );
-                if (room) orderedRooms.push(room);
-            });
+    const orderedRooms = [];
+    roomTypesInOrder.forEach(type => {
+        const room = availableRooms.find(r =>
+            r.descricao.includes(type.name) ||
+            r.codigo === type.code
+        );
+        if (room) orderedRooms.push(room);
+    });
 
-            // Calcular número de hóspedes pagantes para taxa extra
-            const childAge1Num = childAge1 || 0;
-            const childAge2Num = childAge2 || 0;
-            
-            // Hóspedes pagantes = adultos + crianças > 6 anos
-            const payingChildren = (hasChildren ? 
-                (childAge1Num > 6 ? 1 : 0) + (childrenCount === 2 && childAge2Num > 6 ? 1 : 0) : 0);
-            const totalPayingGuests = adults + payingChildren;
-            const extraGuests = Math.max(0, totalPayingGuests - 2);
+    // Calcular número de hóspedes pagantes para taxa extra
+    const childAge1Num = childAge1 || 0;
+    const childAge2Num = childAge2 || 0;
+    
+    // Hóspedes pagantes = adultos + crianças > 6 anos
+    const payingChildren = (hasChildren ? 
+        (childAge1Num > 6 ? 1 : 0) + (childrenCount === 2 && childAge2Num > 6 ? 1 : 0) : 0);
+    const totalPayingGuests = adults + payingChildren;
+    const extraGuests = Math.max(0, totalPayingGuests - 2);
 
-            orderedRooms.forEach(room => {
-                const roomDiv = document.createElement('div');
-                roomDiv.style.display = 'flex';
-                roomDiv.style.alignItems = 'center';
-                roomDiv.style.gap = '12px';
-                roomDiv.style.padding = '12px 15px';
-                roomDiv.style.borderBottom = '1px solid #f0f0f0';
+    orderedRooms.forEach(room => {
+        const roomDiv = document.createElement('div');
+        roomDiv.style.display = 'flex';
+        roomDiv.style.flexDirection = 'row';
+        roomDiv.style.alignItems = 'flex-start';
+        roomDiv.style.padding = '12px 10px';
+        roomDiv.style.borderBottom = '1px solid #f0f0f0';
+        roomDiv.style.gap = '10px';
 
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `room-${room.codigo}`;
-                
-                // Calcular valor total por noite considerando hóspedes extras
-                const extraGuestFeePerNight = extraGuests * 102;
-                const totalPerNight = room.valorMedio + extraGuestFeePerNight;
-                
-                // Armazenar todos os dados necessários, incluindo o valor total calculado
-                checkbox.value = JSON.stringify({
-                    descricao: room.descricao,
-                    total: room.total,
-                    valorMedio: room.valorMedio,
-                    disponivel: true,
-                    codigo: room.codigo,
-                    totalPerNight: totalPerNight,
-                    extraGuests: extraGuests
-                });
-                checkbox.style.width = '20px';
-                checkbox.style.height = '20px';
-                checkbox.style.cursor = 'pointer';
+        // Coluna do checkbox (fixa à esquerda)
+        const checkboxCol = document.createElement('div');
+        checkboxCol.style.width = '30px';
+        checkboxCol.style.flexShrink = '0';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `room-${room.codigo}`;
+        
+        // Calcular valor total por noite considerando hóspedes extras
+        const extraGuestFeePerNight = extraGuests * 102;
+        const totalPerNight = room.valorMedio + extraGuestFeePerNight;
+        
+        checkbox.value = JSON.stringify({
+            descricao: room.descricao,
+            total: room.total,
+            valorMedio: room.valorMedio,
+            disponivel: true,
+            codigo: room.codigo,
+            totalPerNight: totalPerNight,
+            extraGuests: extraGuests
+        });
+        checkbox.style.width = '18px';
+        checkbox.style.height = '18px';
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.margin = '2px 0 0 0';
+        
+        checkboxCol.appendChild(checkbox);
 
-                const textContainer = document.createElement('div');
-                textContainer.style.flex = '1';
-                textContainer.style.display = 'flex';
-                textContainer.style.alignItems = 'center';
-                textContainer.style.flexWrap = 'wrap';
-                textContainer.style.gap = '12px';
+        // Coluna do conteúdo (flexível)
+        const contentCol = document.createElement('div');
+        contentCol.style.flex = '1';
+        contentCol.style.display = 'flex';
+        contentCol.style.flexDirection = 'column';
+        contentCol.style.gap = '4px';
 
-                const label = document.createElement('label');
-                label.htmlFor = `room-${room.codigo}`;
-                label.textContent = room.descricao;
-                label.style.fontWeight = '500';
-                label.style.fontSize = '15px';
-                label.style.cursor = 'pointer';
-                label.style.color = '#333';
+        // Linha superior: nome da acomodação
+        const nameRow = document.createElement('div');
+        nameRow.style.display = 'flex';
+        nameRow.style.flexWrap = 'wrap';
+        nameRow.style.alignItems = 'center';
+        nameRow.style.gap = '8px';
 
-                // Container de preço simplificado - apenas o valor total por noite
-                const priceSpan = document.createElement('span');
-                priceSpan.className = 'price-display';
-                priceSpan.textContent = `${formatCurrency(totalPerNight)}/noite`;
-                priceSpan.style.marginLeft = '12px';
-                priceSpan.style.fontWeight = '600';
-                priceSpan.style.color = '#075e54';
-                priceSpan.style.fontSize = '15px';
+        const label = document.createElement('label');
+        label.htmlFor = `room-${room.codigo}`;
+        label.textContent = room.descricao;
+        label.style.fontWeight = '500';
+        label.style.fontSize = '15px';
+        label.style.cursor = 'pointer';
+        label.style.color = '#333';
+        label.style.lineHeight = '1.4';
 
-                let videoFileName = '';
-                const roomDesc = room.descricao.toLowerCase();
+        nameRow.appendChild(label);
 
-                if (roomDesc.includes('apartamento superior') || room.codigo === 'SUP') {
-                    videoFileName = 'Apartamento Superior.mp4';
-                } 
-                else if (roomDesc.includes('suite senior') || roomDesc.includes('suíte sênior') || room.codigo === 'SEN') {
-                    videoFileName = 'Suíte Sênior.mp4';
-                } 
-                else if (roomDesc.includes('suite master') || roomDesc.includes('suíte master') || roomDesc.includes('cobertura') || room.codigo === 'MAS') {
-                    videoFileName = 'Suíte Máster.mp4';
-                }
+        // Linha inferior: preço e botão de vídeo
+        const bottomRow = document.createElement('div');
+        bottomRow.style.display = 'flex';
+        bottomRow.style.flexWrap = 'wrap';
+        bottomRow.style.alignItems = 'center';
+        bottomRow.style.justifyContent = 'space-between';
+        bottomRow.style.gap = '8px';
+        bottomRow.style.marginTop = '2px';
 
-                const buttonContainer = document.createElement('div');
-                buttonContainer.style.display = 'flex';
-                buttonContainer.style.alignItems = 'center';
-                buttonContainer.style.marginLeft = 'auto';
+        // Container do preço
+        const priceContainer = document.createElement('div');
+        
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'price-display';
+        priceSpan.textContent = `${formatCurrency(totalPerNight)}/noite`;
+        priceSpan.style.fontWeight = '600';
+        priceSpan.style.color = '#075e54';
+        priceSpan.style.fontSize = '14px';
+        priceSpan.style.backgroundColor = '#e8f5e9';
+        priceSpan.style.padding = '2px 8px';
+        priceSpan.style.borderRadius = '12px';
+        priceSpan.style.display = 'inline-block';
+        
+        priceContainer.appendChild(priceSpan);
 
-                if (videoFileName) {
-                    const videoBtn = document.createElement('button');
-                    videoBtn.className = 'video-button';
-                    videoBtn.innerHTML = '▶ Ver vídeo';
-                    videoBtn.style.backgroundColor = '#e6f3f0';
-                    videoBtn.style.border = 'none';
-                    videoBtn.style.borderRadius = '20px';
-                    videoBtn.style.padding = '6px 16px';
-                    videoBtn.style.fontSize = '13px';
-                    videoBtn.style.fontWeight = '500';
-                    videoBtn.style.color = '#075e54';
-                    videoBtn.style.cursor = 'pointer';
-                    videoBtn.style.transition = 'background-color 0.2s';
-                    videoBtn.style.whiteSpace = 'nowrap';
-                    
-                    videoBtn.onmouseover = () => {
-                        videoBtn.style.backgroundColor = '#c8e6e0';
-                    };
-                    videoBtn.onmouseout = () => {
-                        videoBtn.style.backgroundColor = '#e6f3f0';
-                    };
-                    
-                    videoBtn.onclick = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        openVideoModal(videoFileName);
-                    };
-                    
-                    buttonContainer.appendChild(videoBtn);
-                }
+        // Determinar o nome do arquivo de vídeo
+        let videoFileName = '';
+        const roomDesc = room.descricao.toLowerCase();
 
-                textContainer.appendChild(label);
-                textContainer.appendChild(priceSpan);
-                
-                roomDiv.appendChild(checkbox);
-                roomDiv.appendChild(textContainer);
-                roomDiv.appendChild(buttonContainer);
-
-                roomsContainer.appendChild(roomDiv);
-            });
-
-            const addButton = document.createElement('button');
-            addButton.id = 'addToQuoteBtn';
-            addButton.className = 'quote-button';
-            addButton.textContent = '➕ Incluir ao orçamento';
-            addButton.style.marginTop = '10px';
-            addButton.style.width = '100%';
-
-            addButton.addEventListener('click', function () {
-                const checkboxes = document.querySelectorAll('#roomsContainer input[type="checkbox"]:checked');
-
-                if (checkboxes.length === 0) {
-                    alert('Por favor, selecione pelo menos uma acomodação.');
-                    return;
-                }
-
-                checkboxes.forEach(checkbox => {
-                    try {
-                        const selectedRoom = JSON.parse(checkbox.value);
-                        askForAdditionalRoom(selectedRoom, startDate, endDate, adults, hasChildren, childAge1, childAge2, childrenCount, extraGuests);
-                    } catch (e) {
-                        console.error('Erro ao processar seleção de quarto:', e);
-                    }
-                });
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            });
-
-            roomSelectionSection.appendChild(addButton);
+        if (roomDesc.includes('apartamento superior') || room.codigo === 'SUP') {
+            videoFileName = 'Apartamento Superior.mp4';
+        } 
+        else if (roomDesc.includes('suite senior') || roomDesc.includes('suíte sênior') || room.codigo === 'SEN') {
+            videoFileName = 'Suíte Sênior.mp4';
+        } 
+        else if (roomDesc.includes('suite master') || roomDesc.includes('suíte master') || roomDesc.includes('cobertura') || room.codigo === 'MAS') {
+            videoFileName = 'Suíte Máster.mp4';
         }
+
+        // Container do botão de vídeo
+        const videoContainer = document.createElement('div');
+
+        if (videoFileName) {
+            const videoBtn = document.createElement('button');
+            videoBtn.className = 'video-button';
+            videoBtn.innerHTML = '▶ Ver vídeo';
+            videoBtn.style.backgroundColor = '#e6f3f0';
+            videoBtn.style.border = 'none';
+            videoBtn.style.borderRadius = '20px';
+            videoBtn.style.padding = '6px 14px';
+            videoBtn.style.fontSize = '13px';
+            videoBtn.style.fontWeight = '500';
+            videoBtn.style.color = '#075e54';
+            videoBtn.style.cursor = 'pointer';
+            videoBtn.style.transition = 'background-color 0.2s';
+            videoBtn.style.whiteSpace = 'nowrap';
+            videoBtn.style.display = 'inline-flex';
+            videoBtn.style.alignItems = 'center';
+            videoBtn.style.gap = '4px';
+            
+            videoBtn.onmouseover = () => {
+                videoBtn.style.backgroundColor = '#c8e6e0';
+            };
+            videoBtn.onmouseout = () => {
+                videoBtn.style.backgroundColor = '#e6f3f0';
+            };
+            
+            videoBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openVideoModal(videoFileName);
+            };
+            
+            videoContainer.appendChild(videoBtn);
+        }
+
+        // Em telas pequenas, organiza verticalmente
+        if (window.innerWidth <= 480) {
+            bottomRow.style.flexDirection = 'column';
+            bottomRow.style.alignItems = 'flex-start';
+            videoContainer.style.marginTop = '4px';
+            videoContainer.style.width = '100%';
+            if (videoBtn) videoBtn.style.width = '100%';
+        }
+
+        bottomRow.appendChild(priceContainer);
+        bottomRow.appendChild(videoContainer);
+
+        contentCol.appendChild(nameRow);
+        contentCol.appendChild(bottomRow);
+
+        roomDiv.appendChild(checkboxCol);
+        roomDiv.appendChild(contentCol);
+
+        roomsContainer.appendChild(roomDiv);
+    });
+
+    const addButton = document.createElement('button');
+    addButton.id = 'addToQuoteBtn';
+    addButton.className = 'quote-button';
+    addButton.textContent = '➕ Incluir ao orçamento';
+    addButton.style.marginTop = '15px';
+    addButton.style.width = '100%';
+    addButton.style.padding = '12px';
+    addButton.style.fontSize = '16px';
+
+    addButton.addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('#roomsContainer input[type="checkbox"]:checked');
+
+        if (checkboxes.length === 0) {
+            alert('Por favor, selecione pelo menos uma acomodação.');
+            return;
+        }
+
+        checkboxes.forEach(checkbox => {
+            try {
+                const selectedRoom = JSON.parse(checkbox.value);
+                askForAdditionalRoom(selectedRoom, startDate, endDate, adults, hasChildren, childAge1, childAge2, childrenCount, extraGuests);
+            } catch (e) {
+                console.error('Erro ao processar seleção de quarto:', e);
+            }
+        });
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    });
+
+    roomSelectionSection.appendChild(addButton);
+
+    // Adicionar listener para redimensionamento da janela
+    window.addEventListener('resize', function() {
+        const bottomRows = document.querySelectorAll('#roomsContainer > div > div:nth-child(2) > div:nth-child(2)');
+        bottomRows.forEach(row => {
+            if (window.innerWidth <= 480) {
+                row.style.flexDirection = 'column';
+                row.style.alignItems = 'flex-start';
+                const videoContainer = row.querySelector('div:last-child');
+                if (videoContainer) {
+                    videoContainer.style.marginTop = '4px';
+                    videoContainer.style.width = '100%';
+                    const videoBtn = videoContainer.querySelector('button');
+                    if (videoBtn) videoBtn.style.width = '100%';
+                }
+            } else {
+                row.style.flexDirection = 'row';
+                row.style.alignItems = 'center';
+                const videoContainer = row.querySelector('div:last-child');
+                if (videoContainer) {
+                    videoContainer.style.marginTop = '0';
+                    videoContainer.style.width = 'auto';
+                    const videoBtn = videoContainer.querySelector('button');
+                    if (videoBtn) videoBtn.style.width = 'auto';
+                }
+            }
+        });
+    });
+}
 
         // FUNÇÃO PARA REMOVER ACOMODAÇÃO DO CARRINHO
         function removeRoomFromCart(indexToRemove) {

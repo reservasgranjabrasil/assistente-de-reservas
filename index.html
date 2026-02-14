@@ -141,7 +141,6 @@
             color: #000;
         }
 
-        /* CORREÇÃO: Estilo para o indicador de digitação */
         .typing-message {
             margin-bottom: 8px;
             display: flex;
@@ -403,41 +402,86 @@
             border-top: 1px dashed rgba(255,255,255,0.3);
         }
 
-        /* Estilos para campos desabilitados */
         input:disabled, select:disabled {
             background-color: #f5f5f5;
             cursor: not-allowed;
             opacity: 0.7;
         }
 
-        /* Estilos para a seleção de quartos com checkboxes */
+        /* ===== ESTILOS ATUALIZADOS PARA SELEÇÃO DE ACOMODAÇÕES ===== */
         #roomsContainer {
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
+            max-height: none;
+            overflow-y: visible;
+            padding: 15px;
             background: white;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             border: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-            #roomsContainer label {
-                cursor: pointer;
-                user-select: none;
-            }
+        #roomsContainer label {
+            cursor: pointer;
+            user-select: none;
+            font-size: 15px;
+            display: inline-block;
+            margin-left: 8px;
+        }
 
-            #roomsContainer input[type="checkbox"] {
-                cursor: pointer;
-                margin-right: 10px;
-            }
+        #roomsContainer input[type="checkbox"] {
+            cursor: pointer;
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            transform: scale(1.1);
+        }
 
-            #roomsContainer div {
-                display: flex;
-                align-items: center;
-                margin: 8px 0;
-            }
+        #roomsContainer > div {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin: 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
 
-        /* Estilos para respostas da IA */
+        #roomsContainer > div:hover {
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        #roomsContainer > div:last-child {
+            border-bottom: none;
+        }
+
+        #roomsContainer .video-button {
+            margin-left: auto;
+            background-color: #e6f3f0;
+            border: none;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #075e54;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        #roomsContainer .video-button:hover {
+            background-color: #c8e6e0;
+        }
+
+        #roomsContainer span[style*="color: #075e54"] {
+            margin-left: 12px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        /* ===== FIM DOS ESTILOS ATUALIZADOS ===== */
+
         .ai-response {
             background: white;
             border-radius: 8px;
@@ -480,7 +524,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Estilo para mensagens divididas */
         .message-part {
             margin-bottom: 10px;
             animation: fadeIn 0.5s ease;
@@ -497,7 +540,6 @@
             }
         }
 
-        /* Estilo para indicador de digitação humana */
         .human-typing {
             font-style: italic;
             color: #666;
@@ -505,7 +547,6 @@
             margin-bottom: 5px;
         }
 
-        /* ===== NOVOS ESTILOS: Botão de Vídeo e Modal ===== */
         .video-button {
             background: none;
             border: none;
@@ -528,7 +569,6 @@
             text-decoration: underline;
         }
 
-        /* Estilo para o Modal */
         .modal {
             display: none;
             position: fixed;
@@ -555,7 +595,6 @@
             overflow: hidden;
         }
 
-        /* Container para o vídeo */
         .video-container {
             position: relative;
             width: 100%;
@@ -574,7 +613,6 @@
             display: block;
         }
 
-        /* Botão de fechar (X) */
         .close-modal {
             position: absolute;
             top: 10px;
@@ -592,7 +630,6 @@
             color: #bbb;
         }
 
-        /* Estilo para o container de acomodações */
         .accommodation-item {
             background: white;
             border-radius: 8px;
@@ -650,7 +687,45 @@
         .video-button-accommodation:hover {
             background: #128c7e;
         }
-        /* ===== FIM DOS NOVOS ESTILOS ===== */
+
+        /* Estilo para botão de exclusão */
+        .remove-room-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 18px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 0;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .remove-room-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .cart-item-content {
+            flex: 1;
+        }
 
         @media (min-width: 768px) {
             body {
@@ -744,6 +819,40 @@
                 .form-row .form-group {
                     flex: 1;
                 }
+
+            /* Responsividade para a seleção de acomodações */
+            @media (max-width: 768px) {
+                #roomsContainer > div {
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+                
+                #roomsContainer .video-button {
+                    margin-left: 0;
+                    width: 100%;
+                    text-align: center;
+                }
+                
+                #roomsContainer span[style*="color: #075e54"] {
+                    margin-left: 0;
+                }
+            }
+        }
+
+        /* Estilos para os novos elementos de preço */
+        .price-display {
+            font-weight: 600;
+            color: #075e54;
+            font-size: 15px;
+            margin-left: 12px;
+            white-space: nowrap;
+        }
+
+        .room-price-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
         }
     </style>
 </head>
@@ -790,7 +899,6 @@
                 </div>
             </div>
 
-            <!-- CORREÇÃO: Indicador de digitação separado -->
             <div class="typing-message" id="typingContainer" style="display: none;">
                 <div class="message-avatar bot-avatar">🤖</div>
                 <div class="typing-indicator">
@@ -813,7 +921,6 @@
         </div>
     </div>
 
-    <!-- ===== NOVO: Estrutura do Modal de Vídeo ===== -->
     <div id="videoModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeVideoModal()">&times;</span>
@@ -825,7 +932,6 @@
             </div>
         </div>
     </div>
-    <!-- ===== FIM DO NOVO MODAL ===== -->
 
     <script>
         // Configurações do hotel
@@ -880,7 +986,6 @@
 
         // Dados de minlos (estadia mínima)
         const MINLOS_DATA = {
-            // Réveillon 2025
             "20/12/2025": 2,
             "27/12/2025": 2,
             "28/12/2025": 4,
@@ -888,8 +993,6 @@
             "30/12/2025": 3,
             "31/12/2025": 3,
             "01/01/2026": 3,
-            
-            // Janeiro 2026
             "03/01/2026": 2,
             "10/01/2026": 2,
             "17/01/2026": 2,
@@ -898,16 +1001,11 @@
             "20/01/2026": 2,
             "24/01/2026": 2,
             "31/01/2026": 2,
-            
-            // Fevereiro 2026
-                                    
-            // Março 2026
+            "07/02/2026": 2,
             "07/03/2026": 2,
             "14/03/2026": 2,
             "21/03/2026": 2,
             "28/03/2026": 2,
-            
-            // Abril 2026
             "02/04/2026": 3,
             "03/04/2026": 3,
             "04/04/2026": 3,
@@ -920,8 +1018,6 @@
             "22/04/2026": 2,
             "23/04/2026": 2,
             "25/04/2026": 2,
-            
-            // Maio 2026
             "02/05/2026": 2,
             "09/05/2026": 2,
             "16/05/2026": 2,
@@ -931,8 +1027,6 @@
             "02/05/2026": 3,
             "03/05/2026": 3,
             "30/05/2026": 2,
-            
-            // Junho 2026
             "04/06/2026": 3,
             "05/06/2026": 3,
             "06/06/2026": 3,
@@ -940,21 +1034,15 @@
             "13/06/2026": 2,
             "20/06/2026": 2,
             "27/06/2026": 2,
-            
-            // Julho 2026
             "04/07/2026": 2,
             "11/07/2026": 2,
             "18/07/2026": 2,
             "25/07/2026": 2,
-            
-            // Agosto 2026
             "01/08/2026": 2,
             "08/08/2026": 2,
             "15/08/2026": 2,
             "22/08/2026": 2,
             "29/08/2026": 2,
-            
-            // Setembro 2026
             "04/09/2026": 3,
             "05/09/2026": 3,
             "06/09/2026": 3,
@@ -962,8 +1050,6 @@
             "12/09/2026": 2,
             "19/09/2026": 2,
             "26/09/2026": 2,
-            
-            // Outubro 2026
             "03/10/2026": 2,
             "09/10/2026": 3,
             "10/10/2026": 3,
@@ -972,8 +1058,6 @@
             "17/10/2026": 2,
             "24/10/2026": 2,
             "31/10/2026": 2,
-            
-            // Novembro 2026
             "07/11/2026": 2,
             "14/11/2026": 2,
             "19/11/2026": 3,
@@ -981,22 +1065,17 @@
             "21/11/2026": 3,
             "22/11/2026": 3,
             "28/11/2026": 2,
-            
-            // Dezembro 2026
             "05/12/2026": 2,
             "12/12/2026": 2,
             "19/12/2026": 2,
             "26/12/2026": 2,
             "30/12/2026": 4,
             "31/12/2026": 4,
-            
-            // Janeiro 2027
             "01/01/2027": 4,
             "02/01/2027": 4,
             "03/01/2027": 4
         };
 
-        // Funções de formatação e conversão
         function convertCurrencyToNumber(currencyString) {
             if (!currencyString) return 0;
             const numericString = currencyString.toString()
@@ -1040,16 +1119,13 @@
             return dates;
         }
 
-        // Função para verificar a estadia mínima (corrigida)
         function checkMinLOS(startDateStr, endDateStr) {
             const startDate = new Date(startDateStr);
             const endDate = new Date(endDateStr);
             const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-            // Obter todas as datas do período
             const datesInPeriod = getDatesBetween(startDateStr, endDateStr);
             
-            // Encontrar o maior minLOS entre todas as datas do período
             let maxMinLOS = 1;
             let dateWithMaxMinLOS = '';
             
@@ -1061,7 +1137,6 @@
                 }
             });
 
-            // Verificar se a estadia atende ao maior minLOS encontrado
             if (nights < maxMinLOS) {
                 return {
                     valid: false,
@@ -1072,7 +1147,6 @@
             return { valid: true };
         }
 
-        // Funções da API
         const availabilityCache = {};
 
         async function fetchAvailability(startDate, endDate) {
@@ -1082,7 +1156,6 @@
                 return availabilityCache[cacheKey];
             }
 
-            // Usando o seu proxy privado do Cloudflare Workers para máxima estabilidade
             const proxies = [
                 { url: 'https://broken-hall-6760.paulo-migueoli.workers.dev/', type: 'direct' }
             ];
@@ -1120,9 +1193,8 @@
 
                     let response;
                     if (proxy.type === 'allorigins') {
-                        // AllOrigins 'get' endpoint embrulha a resposta em um JSON
                         response = await fetch(fullUrl, {
-                            method: 'POST', // AllOrigins aceita POST para o endpoint /get mas o trata de forma específica
+                            method: 'POST',
                             headers: {
                                 'Authorization': 'Basic cm9sRHNsOkJyNDVpMUAyMDE4',
                                 'Content-Type': 'application/json',
@@ -1147,13 +1219,10 @@
 
                     let data = await response.json();
                     
-                    // Se for AllOrigins, o conteúdo real está dentro de data.contents
                     if (proxy.type === 'allorigins' && data.contents) {
                         try {
                             data = JSON.parse(data.contents);
-                        } catch (e) {
-                            // Se não for JSON, pode ser a resposta direta
-                        }
+                        } catch (e) {}
                     }
 
                     availabilityCache[cacheKey] = data;
@@ -1166,7 +1235,6 @@
                 }
             }
 
-            // Se todos os proxies falharem
             throw new Error('Serviço indisponível no momento. Por favor, tente novamente mais tarde.');
         }
 
@@ -1192,15 +1260,14 @@
                     throw new Error('Formato de dados inválido retornado pela API');
                 }
 
-                // Aplica desconto de 5% em todos os valores retornados
                 data.data.dataFormatted = data.data.dataFormatted.map(room => {
                     const valorMedio = convertCurrencyToNumber(room.valorMedio || room.total);
                     const total = convertCurrencyToNumber(room.total);
 
                     return {
                         ...room,
-                        valorMedio: valorMedio * 0.95,  // Aplica 5% de desconto
-                        total: total * 0.95             // Aplica 5% de desconto
+                        valorMedio: valorMedio * 0.95,
+                        total: total * 0.95
                     };
                 });
 
@@ -1211,15 +1278,12 @@
             }
         }
 
-        // ========= FUNÇÃO callHotelAI CORRIGIDA - MANTÉM O MESMO ID =========
         async function callHotelAI(message) {
             try {
                 console.log('Chamando IA para:', message.substring(0, 50) + '...');
                 
-                // ✅ CORREÇÃO: Verificar e REUTILIZAR o conversation_id existente
                 let conversationId = localStorage.getItem('granja_conversation_id');
                 
-                // ✅ SÓ gera NOVO ID se NÃO EXISTIR nenhum
                 if (!conversationId) {
                     conversationId = `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                     localStorage.setItem('granja_conversation_id', conversationId);
@@ -1228,10 +1292,8 @@
                     console.log('🆔 Reutilizando conversation_id existente:', conversationId);
                 }
                 
-                // Histórico APENAS com mensagens anteriores (NÃO incluir a atual)
                 const historyForAPI = conversationHistory
                     .filter(msg => {
-                        // Garantir que não estamos enviando a mensagem atual duplicada
                         const isCurrentMessage = msg.isUser && 
                             typeof msg.content === 'string' && 
                             msg.content.trim() === message.trim();
@@ -1257,7 +1319,7 @@
                     },
                     body: JSON.stringify({
                         prompt: message,
-                        conversation_id: conversationId, // ✅ MESMO ID para TODAS as mensagens
+                        conversation_id: conversationId,
                         history: historyForAPI.slice(-20)
                     })
                 });
@@ -1268,7 +1330,6 @@
 
                 const data = await response.json();
                 
-                // ✅ Atualizar o ID apenas se o worker retornar um diferente (raro)
                 if (data.conversation_id && data.conversation_id !== conversationId) {
                     console.log('🆔 Atualizando conversation_id:', data.conversation_id);
                     localStorage.setItem('granja_conversation_id', data.conversation_id);
@@ -1287,19 +1348,15 @@
             }
         }
 
-        // ========= FUNÇÃO PARA FORMATAR RESPOSTAS DA IA =========
         function formatAIResponse(text) {
             if (!text) return text;
             
             let formattedText = text;
             
-            // 1. Converter **texto** para <strong>texto</strong>
             formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             
-            // 2. Remover a dica sobre clicar em números
             formattedText = formattedText.replace(/💡 Dica: Clique em um número para ligar diretamente!/g, '');
             
-            // 3. Remover termos como "Resposta precisa:", "Informação complementar:", etc.
             const patternsToRemove = [
                 /Resposta precisa:/g,
                 /Informação complementar \(da Categoria \d+\):/g,
@@ -1313,41 +1370,32 @@
                 formattedText = formattedText.replace(pattern, '');
             });
             
-            // 4. Limpar linhas em branco extras
             formattedText = formattedText.replace(/\n\s*\n\s*\n/g, '\n\n');
             
-            // 5. Substituir quebras de linha por tags <br> e parágrafos
             formattedText = formattedText.replace(/\n\n/g, '</p><p>');
             formattedText = formattedText.replace(/\n/g, '<br>');
             
-            // 6. Envolver em parágrafo se não estiver
             if (!formattedText.startsWith('<p>')) {
                 formattedText = `<p>${formattedText}</p>`;
             }
             
-            // 7. Formatar listas com marcadores
             formattedText = formattedText.replace(/•\s*/g, '<li>');
             formattedText = formattedText.replace(/<\/li><br>/g, '</li>');
             
-            // Se detectar itens de lista, criar lista formatada
             if (formattedText.includes('<li>')) {
-                // Adicionar container de lista
                 formattedText = formattedText.replace(/<li>(.*?)<\/li>/g, function(match, content) {
                     return `<li style="margin: 5px 0; padding-left: 5px;">${content.trim()}</li>`;
                 });
                 
-                // Envolver em lista não ordenada
                 formattedText = formattedText.replace(/<li>/, '<ul style="margin: 10px 0; padding-left: 20px;">');
                 formattedText = formattedText.replace(/<\/p>$/, '</ul></p>');
             }
             
-            // 8. Destacar telefones e números importantes
             formattedText = formattedText.replace(/(\(\d{2}\)\s*\d{4,5}-\d{4})/g, 
                 '<strong style="color: #075e54;">$1</strong>');
             formattedText = formattedText.replace(/(\d{2}\s*\d{4,5}-\d{4})/g, 
                 '<strong style="color: #075e54;">$1</strong>');
             
-            // 9. Destacar nomes de estabelecimentos
             const estabelecimentos = [
                 "Salão Andrea Novena", "Ateliê da Beleza", "Farley Frossard", 
                 "Divino & Cucina", "Suki Gastronomia Japonesa", "Lenha & Co", 
@@ -1363,14 +1411,11 @@
                 formattedText = formattedText.replace(regex, '<strong>$&</strong>');
             });
             
-            // 10. Formatar endereços
             formattedText = formattedText.replace(/(Shopping Itaipava|Shopping Vilarejo|Estrada União e Indústria|Estrada Bernardo Coutinho|Rua Francisco dos Santos)/g, 
                 '<span style="color: #666;">$1</span>');
             
-            // 11. Adicionar estilos para melhor legibilidade
             formattedText = formattedText.replace(/<p>/g, '<p style="margin: 8px 0; line-height: 1.5;">');
             
-            // 12. Adicionar container para resposta formatada
             formattedText = `
                 <div class="ai-response">
                     ${formattedText}
@@ -1380,7 +1425,6 @@
             return formattedText;
         }
 
-        // ========= FUNÇÃO PARA EXPORTAR CONVERSA ATUAL =========
         function exportCurrentConversation() {
             const conversationId = localStorage.getItem('granja_conversation_id') || 'conversa_atual';
             
@@ -1406,10 +1450,8 @@
             linkElement.click();
         }
 
-        // ========= FUNÇÃO PARA ADICIONAR CLICK AOS TELEFONES =========
         function setupPhoneClicks() {
             setTimeout(() => {
-                // Encontrar todos os números de telefone na resposta
                 const phoneRegex = /(\(\d{2}\)\s*\d{4,5}-\d{4})|(\d{2}\s*\d{4,5}-\d{4})/g;
                 const messageElements = document.querySelectorAll('.message.bot .message-content');
                 
@@ -1428,16 +1470,13 @@
             }, 100);
         }
 
-        // ========= FUNÇÃO FALLBACK FORMATADA =========
         function getFallbackResponse(message) {
             const lowerMessage = message.toLowerCase();
             
-            // Verificar se é uma pergunta sobre orçamento/reserva
             if (lowerMessage.includes('orçamento') || lowerMessage.includes('preço') || lowerMessage.includes('valor') || lowerMessage.includes('reserva')) {
                 return generateQuoteForm();
             }
             
-            // Fallback genérico
             return `
                 <p>Desculpe, estou com dificuldades técnicas no momento.</p>
                 <p>Você pode:</p>
@@ -1451,17 +1490,14 @@
             `;
         }
 
-        // ========= FUNÇÃO PARA DIVIDIR RESPOSTAS EM PARTES =========
         function splitResponseIntoParts(responseText) {
             const parts = [];
-            const maxLength = 300; // Caracteres por parte
+            const maxLength = 300;
             
-            // Se a resposta for curta, retorna como uma única parte
             if (responseText.length <= maxLength) {
                 return [responseText];
             }
             
-            // Dividir por parágrafos
             const paragraphs = responseText.split('</p><p>');
             
             let currentPart = '';
@@ -1474,7 +1510,6 @@
                 }
             }
             
-            // Adicionar a última parte
             if (currentPart.length > 0) {
                 parts.push(currentPart);
             }
@@ -1482,53 +1517,44 @@
             return parts;
         }
 
-        // ========= FUNÇÃO PARA ADICIONAR MENSAGEM COM DIGITAÇÃO HUMANA =========
         async function addMessageWithHumanTyping(content, isUser = false) {
             if (isUser) {
-                // Para mensagens do usuário, apenas adiciona
                 addMessage(content, true);
                 return;
             }
             
-            // Para respostas da IA, divide em partes e adiciona com digitação
             const parts = splitResponseIntoParts(content);
             
             for (let i = 0; i < parts.length; i++) {
                 const part = parts[i];
                 
-                // Mostrar "digitando..." antes de cada parte (exceto a primeira se já estiver mostrando)
                 if (i > 0) {
                     showTyping();
-                    await delay(800 + Math.random() * 800); // Tempo aleatório entre 800-1600ms
+                    await delay(800 + Math.random() * 800);
                     hideTyping();
                 }
                 
-                // Adicionar a parte da mensagem
                 addMessage(part, false);
                 
-                // Aguardar um pouco entre as partes (tempo de digitação)
                 if (i < parts.length - 1) {
-                    await delay(1000 + Math.random() * 1000); // Tempo aleatório entre 1000-2000ms
+                    await delay(1000 + Math.random() * 1000);
                 }
             }
         }
 
-        // ========= FUNÇÃO DE DELAY =========
         function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        // Variáveis globais
         let conversationHistory = [];
         let currentQuoteData = null;
         let selectedRooms = [];
         let currentAvailabilityData = null;
         let isCheckingAvailability = false;
         let isProcessingQuickAction = false;
-        let isSendingMessage = false; // Novo flag para evitar múltiplos envios
+        let isSendingMessage = false;
         const availabilityHistory = [];
 
-        // Funções do chat
         function addMessage(content, isUser = false) {
             const messagesContainer = document.getElementById('chatMessages');
             const typingContainer = document.getElementById('typingContainer');
@@ -1543,7 +1569,6 @@
             const messageContent = document.createElement('div');
             messageContent.className = 'message-content';
             
-            // Se for uma resposta da IA, garantir que tenha o estilo correto
             if (!isUser && typeof content === 'string' && content.includes('ai-response')) {
                 messageContent.innerHTML = content;
             } else if (typeof content === 'string') {
@@ -1567,19 +1592,16 @@
                 timestamp: new Date()
             });
 
-            // Configurar listeners para números de telefone clicáveis
             setTimeout(() => {
                 setupButtonListeners();
                 setupPhoneClicks();
             }, 50);
         }
 
-        // CORREÇÃO: Funções showTyping e hideTyping atualizadas
         function showTyping() {
             const typingContainer = document.getElementById('typingContainer');
             if (typingContainer) {
                 typingContainer.style.display = 'flex';
-                // Rolar para mostrar o indicador
                 setTimeout(() => {
                     typingContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 50);
@@ -1617,7 +1639,6 @@
             return loadingDiv;
         }
 
-        // Funções para controle dos campos de data
         function disableDateInputs() {
             const checkinDate = document.getElementById('checkinDate');
             const checkoutDate = document.getElementById('checkoutDate');
@@ -1653,14 +1674,12 @@
             const childAgeGroup2 = document.getElementById('childAgeGroup2');
             if (childAgeGroup2) childAgeGroup2.style.display = 'none';
 
-            // Limpar checkboxes se existirem
             const roomsContainer = document.getElementById('roomsContainer');
             if (roomsContainer) {
                 roomsContainer.innerHTML = '';
             }
         }
 
-        // Funções do formulário de cotação
         function generateQuoteForm() {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
@@ -1849,7 +1868,6 @@
             let infoMessage = '';
             let hasAvailableOptions = false;
 
-            // Atualizar checkboxes existentes
             const checkboxes = document.querySelectorAll('#roomsContainer input[type="checkbox"]');
             checkboxes.forEach(checkbox => {
                 const roomData = JSON.parse(checkbox.value);
@@ -1862,7 +1880,6 @@
                 let isAvailable = true;
                 let reason = '';
 
-                // Verificar disponibilidade para todas as datas
                 const hasAvailability = datesToCheck.every(date => {
                     return currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomCode] &&
                            currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomCode].diaria[date] > 0;
@@ -1903,7 +1920,6 @@
                 infoDiv.textContent = infoMessage;
             }
 
-            // Retorna se ainda há opções disponíveis
             return hasAvailableOptions;
         }
 
@@ -1930,7 +1946,6 @@
             const roomSelectionSection = document.getElementById('roomSelectionSection');
             const quoteResultContainer = document.getElementById('quoteResultContainer');
 
-            // Validações básicas
             if (!startDate || !endDate) {
                 errorIndicator.innerHTML = showError('Por favor, selecione as datas de check-in e check-out').outerHTML;
                 errorIndicator.style.display = 'block';
@@ -1939,11 +1954,10 @@
                 roomSelectionSection.style.display = 'none';
                 quoteResultContainer.style.display = 'none';
                 isCheckingAvailability = false;
-                enableDateInputs(); // Habilitar campos novamente em caso de erro
+                enableDateInputs();
                 return;
             }
 
-            // Validação de antecedência de 1 dia
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const checkinDate = new Date(startDate);
@@ -1956,7 +1970,7 @@
                 roomSelectionSection.style.display = 'none';
                 quoteResultContainer.style.display = 'none';
                 isCheckingAvailability = false;
-                enableDateInputs(); // Habilitar campos novamente em caso de erro
+                enableDateInputs();
                 return;
             }
 
@@ -1968,11 +1982,10 @@
                 roomSelectionSection.style.display = 'none';
                 quoteResultContainer.style.display = 'none';
                 isCheckingAvailability = false;
-                enableDateInputs(); // Habilitar campos novamente em caso de erro
+                enableDateInputs();
                 return;
             }
 
-            // Verificar estadia mínima (minLOS)
             const minLOSCheck = checkMinLOS(startDate, endDate);
             if (!minLOSCheck.valid) {
                 errorIndicator.innerHTML = showError(minLOSCheck.message).outerHTML;
@@ -1982,7 +1995,7 @@
                 roomSelectionSection.style.display = 'none';
                 quoteResultContainer.style.display = 'none';
                 isCheckingAvailability = false;
-                enableDateInputs(); // Habilitar campos novamente em caso de erro
+                enableDateInputs();
                 return;
             }
 
@@ -2002,7 +2015,6 @@
                     availabilityData = await fetchAvailability(formattedStartDate, formattedEndDate);
                     currentAvailabilityData = availabilityData;
 
-                    // Registrar no histórico
                     availabilityHistory.push({
                         timestamp: new Date(),
                         action: 'Consulta inicial de disponibilidade',
@@ -2019,7 +2031,7 @@
                     loadingIndicator.style.display = 'none';
                     errorIndicator.style.display = 'none';
                     isCheckingAvailability = false;
-                    enableDateInputs(); // Habilitar campos novamente em caso de erro
+                    enableDateInputs();
                     return;
                 }
 
@@ -2069,289 +2081,294 @@
                     loadingIndicator.style.display = 'none';
                     errorIndicator.style.display = 'none';
                     isCheckingAvailability = false;
-                    enableDateInputs(); // Habilitar campos novamente em caso de erro
+                    enableDateInputs();
                     return;
                 }
 
-                // Esconde o loading antes de exibir as opções
                 loadingIndicator.style.display = 'none';
-                displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2);
+                displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2, childrenCount);
             } catch (error) {
                 console.error('Erro na consulta:', error);
                 errorIndicator.innerHTML = showError(error.message).outerHTML;
                 errorIndicator.style.display = 'block';
                 loadingIndicator.style.display = 'none';
                 noAvailabilityIndicator.style.display = 'none';
-                enableDateInputs(); // Habilitar campos novamente em caso de erro
+                enableDateInputs();
             } finally {
                 isCheckingAvailability = false;
             }
         }
 
-        function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2) {
-    const roomSelectionSection = document.getElementById('roomSelectionSection');
-    const quoteResultContainer = document.getElementById('quoteResultContainer');
-    const loadingIndicator = document.getElementById('loadingIndicator');
+        // FUNÇÃO ATUALIZADA - SIMPLIFICADA (apenas valor total por noite)
+        function displayAvailableRooms(apiData, startDate, endDate, availableRooms, adults, hasChildren, childAge1, childAge2, childrenCount) {
+            const roomSelectionSection = document.getElementById('roomSelectionSection');
+            const quoteResultContainer = document.getElementById('quoteResultContainer');
+            const loadingIndicator = document.getElementById('loadingIndicator');
 
-    loadingIndicator.style.display = 'none';
-    roomSelectionSection.style.display = 'block';
-    quoteResultContainer.style.display = 'none';
+            loadingIndicator.style.display = 'none';
+            roomSelectionSection.style.display = 'block';
+            quoteResultContainer.style.display = 'none';
 
-    // Criar container para as opções de quarto
-    const roomsContainer = document.createElement('div');
-    roomsContainer.id = 'roomsContainer';
-    roomsContainer.style.marginBottom = '15px';
+            const roomsContainer = document.createElement('div');
+            roomsContainer.id = 'roomsContainer';
+            roomsContainer.style.marginBottom = '15px';
 
-    // Limpar seção de seleção de quartos
-    roomSelectionSection.innerHTML = '';
-    roomSelectionSection.appendChild(roomsContainer);
+            roomSelectionSection.innerHTML = '';
+            roomSelectionSection.appendChild(roomsContainer);
 
-    // Adicionar título
-    const title = document.createElement('p');
-    title.innerHTML = '<strong>Selecione as acomodações desejadas:</strong>';
-    roomsContainer.appendChild(title);
+            const title = document.createElement('p');
+            title.innerHTML = '<strong>Selecione as acomodações desejadas:</strong>';
+            title.style.marginBottom = '15px';
+            title.style.fontSize = '16px';
+            roomsContainer.appendChild(title);
 
-    // Ordena os quartos na ordem específica
-    const roomTypesInOrder = [
-        { name: "Apartamento Superior", code: "SUP" },
-        { name: "Suíte Sênior", code: "SEN" },
-        { name: "Suíte Master (Cobertura)", code: "MAS" }
-    ];
+            const roomTypesInOrder = [
+                { name: "Apartamento Superior", code: "SUP" },
+                { name: "Suíte Sênior", code: "SEN" },
+                { name: "Suíte Master (Cobertura)", code: "MAS" }
+            ];
 
-    const orderedRooms = [];
-    roomTypesInOrder.forEach(type => {
-        const room = availableRooms.find(r =>
-            r.descricao.includes(type.name) ||
-            r.codigo === type.code
-        );
-        if (room) orderedRooms.push(room);
-    });
+            const orderedRooms = [];
+            roomTypesInOrder.forEach(type => {
+                const room = availableRooms.find(r =>
+                    r.descricao.includes(type.name) ||
+                    r.codigo === type.code
+                );
+                if (room) orderedRooms.push(room);
+            });
 
-    // --- ESTRUTURA CORRIGIDA: Alinhamento aprimorado com Flexbox ---
-    orderedRooms.forEach(room => {
-        // Container principal do quarto (linha)
-        const roomDiv = document.createElement('div');
-        roomDiv.style.display = 'flex';
-        roomDiv.style.alignItems = 'center'; // Alinha verticalmente todos os itens
-        roomDiv.style.gap = '12px'; // Espaço entre os elementos
-        roomDiv.style.margin = '12px 0';
-        roomDiv.style.padding = '5px 0';
-        roomDiv.style.borderBottom = '1px solid #f0f0f0';
-        roomDiv.style.flexWrap = 'wrap'; // Permite quebra em mobile
-
-        // Checkbox
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = `room-${room.codigo}`;
-        checkbox.value = JSON.stringify({
-            descricao: room.descricao,
-            total: room.total,
-            valorMedio: room.valorMedio,
-            disponivel: true,
-            codigo: room.codigo
-        });
-        checkbox.style.margin = '0';
-        checkbox.style.flexShrink = '0'; // Impede que o checkbox encolha
-        checkbox.style.width = '18px';
-        checkbox.style.height = '18px';
-
-        // Container para o texto (nome do quarto e preço)
-        const textContainer = document.createElement('div');
-        textContainer.style.flex = '1'; // Ocupa o espaço disponível
-        textContainer.style.display = 'flex';
-        textContainer.style.alignItems = 'center';
-        textContainer.style.flexWrap = 'wrap';
-        textContainer.style.gap = '8px';
-
-        // Label (nome do quarto)
-        const label = document.createElement('label');
-        label.htmlFor = `room-${room.codigo}`;
-        label.textContent = room.descricao;
-        label.style.fontWeight = '500';
-        label.style.cursor = 'pointer';
-        label.style.margin = '0';
-
-        // Span para o preço
-        const priceSpan = document.createElement('span');
-        priceSpan.textContent = formatCurrency(room.valorMedio);
-        priceSpan.style.color = '#075e54';
-        priceSpan.style.fontWeight = 'bold';
-        priceSpan.style.backgroundColor = '#e6f3f0';
-        priceSpan.style.padding = '2px 8px';
-        priceSpan.style.borderRadius = '12px';
-        priceSpan.style.fontSize = '0.9rem';
-        priceSpan.style.whiteSpace = 'nowrap'; // Impede a quebra do preço
-
-        // Container para o botão de vídeo (alinhado à direita)
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.display = 'flex';
-        buttonContainer.style.alignItems = 'center';
-        buttonContainer.style.marginLeft = 'auto'; // Empurra para a direita
-        buttonContainer.style.flexShrink = '0';
-
-        // Botão de vídeo
-        let videoFileName = '';
-        const roomDesc = room.descricao.toLowerCase();
-
-        if (roomDesc.includes('apartamento superior') || room.codigo === 'SUP') {
-            videoFileName = 'Apartamento Superior.mp4';
-        } 
-        else if (roomDesc.includes('suite senior') || roomDesc.includes('suíte sênior') || room.codigo === 'SEN') {
-            videoFileName = 'Suíte Sênior.mp4';
-        } 
-        else if (roomDesc.includes('suite master') || roomDesc.includes('suíte master') || roomDesc.includes('cobertura') || room.codigo === 'MAS') {
-            videoFileName = 'Suíte Máster.mp4';
-        }
-
-        if (videoFileName) {
-            const videoBtn = document.createElement('button');
-            videoBtn.className = 'video-button';
-            videoBtn.innerHTML = '▶ ver vídeo';
-            videoBtn.style.margin = '0'; // Remove margens extras
-            videoBtn.style.whiteSpace = 'nowrap'; // Impede quebra do texto do botão
+            // Calcular número de hóspedes pagantes para taxa extra
+            const childAge1Num = childAge1 || 0;
+            const childAge2Num = childAge2 || 0;
             
-            videoBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openVideoModal(videoFileName);
-            };
-            
-            buttonContainer.appendChild(videoBtn);
+            // Hóspedes pagantes = adultos + crianças > 6 anos
+            const payingChildren = (hasChildren ? 
+                (childAge1Num > 6 ? 1 : 0) + (childrenCount === 2 && childAge2Num > 6 ? 1 : 0) : 0);
+            const totalPayingGuests = adults + payingChildren;
+            const extraGuests = Math.max(0, totalPayingGuests - 2);
+
+            orderedRooms.forEach(room => {
+                const roomDiv = document.createElement('div');
+                roomDiv.style.display = 'flex';
+                roomDiv.style.alignItems = 'center';
+                roomDiv.style.gap = '12px';
+                roomDiv.style.padding = '12px 15px';
+                roomDiv.style.borderBottom = '1px solid #f0f0f0';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `room-${room.codigo}`;
+                
+                // Calcular valor total por noite considerando hóspedes extras
+                const extraGuestFeePerNight = extraGuests * 102;
+                const totalPerNight = room.valorMedio + extraGuestFeePerNight;
+                
+                // Armazenar todos os dados necessários, incluindo o valor total calculado
+                checkbox.value = JSON.stringify({
+                    descricao: room.descricao,
+                    total: room.total,
+                    valorMedio: room.valorMedio,
+                    disponivel: true,
+                    codigo: room.codigo,
+                    totalPerNight: totalPerNight,
+                    extraGuests: extraGuests
+                });
+                checkbox.style.width = '20px';
+                checkbox.style.height = '20px';
+                checkbox.style.cursor = 'pointer';
+
+                const textContainer = document.createElement('div');
+                textContainer.style.flex = '1';
+                textContainer.style.display = 'flex';
+                textContainer.style.alignItems = 'center';
+                textContainer.style.flexWrap = 'wrap';
+                textContainer.style.gap = '12px';
+
+                const label = document.createElement('label');
+                label.htmlFor = `room-${room.codigo}`;
+                label.textContent = room.descricao;
+                label.style.fontWeight = '500';
+                label.style.fontSize = '15px';
+                label.style.cursor = 'pointer';
+                label.style.color = '#333';
+
+                // Container de preço simplificado - apenas o valor total por noite
+                const priceSpan = document.createElement('span');
+                priceSpan.className = 'price-display';
+                priceSpan.textContent = `${formatCurrency(totalPerNight)}/noite`;
+                priceSpan.style.marginLeft = '12px';
+                priceSpan.style.fontWeight = '600';
+                priceSpan.style.color = '#075e54';
+                priceSpan.style.fontSize = '15px';
+
+                let videoFileName = '';
+                const roomDesc = room.descricao.toLowerCase();
+
+                if (roomDesc.includes('apartamento superior') || room.codigo === 'SUP') {
+                    videoFileName = 'Apartamento Superior.mp4';
+                } 
+                else if (roomDesc.includes('suite senior') || roomDesc.includes('suíte sênior') || room.codigo === 'SEN') {
+                    videoFileName = 'Suíte Sênior.mp4';
+                } 
+                else if (roomDesc.includes('suite master') || roomDesc.includes('suíte master') || roomDesc.includes('cobertura') || room.codigo === 'MAS') {
+                    videoFileName = 'Suíte Máster.mp4';
+                }
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.alignItems = 'center';
+                buttonContainer.style.marginLeft = 'auto';
+
+                if (videoFileName) {
+                    const videoBtn = document.createElement('button');
+                    videoBtn.className = 'video-button';
+                    videoBtn.innerHTML = '▶ Ver vídeo';
+                    videoBtn.style.backgroundColor = '#e6f3f0';
+                    videoBtn.style.border = 'none';
+                    videoBtn.style.borderRadius = '20px';
+                    videoBtn.style.padding = '6px 16px';
+                    videoBtn.style.fontSize = '13px';
+                    videoBtn.style.fontWeight = '500';
+                    videoBtn.style.color = '#075e54';
+                    videoBtn.style.cursor = 'pointer';
+                    videoBtn.style.transition = 'background-color 0.2s';
+                    videoBtn.style.whiteSpace = 'nowrap';
+                    
+                    videoBtn.onmouseover = () => {
+                        videoBtn.style.backgroundColor = '#c8e6e0';
+                    };
+                    videoBtn.onmouseout = () => {
+                        videoBtn.style.backgroundColor = '#e6f3f0';
+                    };
+                    
+                    videoBtn.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openVideoModal(videoFileName);
+                    };
+                    
+                    buttonContainer.appendChild(videoBtn);
+                }
+
+                textContainer.appendChild(label);
+                textContainer.appendChild(priceSpan);
+                
+                roomDiv.appendChild(checkbox);
+                roomDiv.appendChild(textContainer);
+                roomDiv.appendChild(buttonContainer);
+
+                roomsContainer.appendChild(roomDiv);
+            });
+
+            const addButton = document.createElement('button');
+            addButton.id = 'addToQuoteBtn';
+            addButton.className = 'quote-button';
+            addButton.textContent = '➕ Incluir ao orçamento';
+            addButton.style.marginTop = '10px';
+            addButton.style.width = '100%';
+
+            addButton.addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('#roomsContainer input[type="checkbox"]:checked');
+
+                if (checkboxes.length === 0) {
+                    alert('Por favor, selecione pelo menos uma acomodação.');
+                    return;
+                }
+
+                checkboxes.forEach(checkbox => {
+                    try {
+                        const selectedRoom = JSON.parse(checkbox.value);
+                        askForAdditionalRoom(selectedRoom, startDate, endDate, adults, hasChildren, childAge1, childAge2, childrenCount, extraGuests);
+                    } catch (e) {
+                        console.error('Erro ao processar seleção de quarto:', e);
+                    }
+                });
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            });
+
+            roomSelectionSection.appendChild(addButton);
         }
 
-        // Montagem da estrutura
-        textContainer.appendChild(label);
-        textContainer.appendChild(priceSpan);
-        
-        roomDiv.appendChild(checkbox);
-        roomDiv.appendChild(textContainer);
-        roomDiv.appendChild(buttonContainer); // Botão sempre no final, alinhado à direita
-
-        roomsContainer.appendChild(roomDiv);
-    });
-
-    // Botão "Incluir ao orçamento"
-    const addButton = document.createElement('button');
-    addButton.id = 'addToQuoteBtn';
-    addButton.className = 'quote-button';
-    addButton.textContent = '➕ Incluir ao orçamento';
-    addButton.style.marginTop = '10px';
-    addButton.style.width = '100%';
-
-    addButton.addEventListener('click', function () {
-        const checkboxes = document.querySelectorAll('#roomsContainer input[type="checkbox"]:checked');
-
-        if (checkboxes.length === 0) {
-            alert('Por favor, selecione pelo menos uma acomodação.');
-            return;
-        }
-
-        checkboxes.forEach(checkbox => {
-            try {
-                const selectedRoom = JSON.parse(checkbox.value);
-                askForAdditionalRoom(selectedRoom, startDate, endDate, adults, hasChildren, childAge1, childAge2);
-            } catch (e) {
-                console.error('Erro ao processar seleção de quarto:', e);
+        // FUNÇÃO PARA REMOVER ACOMODAÇÃO DO CARRINHO
+        function removeRoomFromCart(indexToRemove) {
+            if (indexToRemove >= 0 && indexToRemove < selectedRooms.length) {
+                // Remover a acomodação
+                selectedRooms.splice(indexToRemove, 1);
+                
+                // Se não houver mais acomodações, voltar ao estado inicial
+                if (selectedRooms.length === 0) {
+                    currentQuoteData = null;
+                    enableDateInputs();
+                    
+                    // Esconder o resultado parcial
+                    const quoteResultContainer = document.getElementById('quoteResultContainer');
+                    if (quoteResultContainer) {
+                        quoteResultContainer.style.display = 'none';
+                    }
+                    
+                    // Mostrar a seleção de quartos novamente
+                    const roomSelectionSection = document.getElementById('roomSelectionSection');
+                    if (roomSelectionSection) {
+                        roomSelectionSection.style.display = 'block';
+                    }
+                } else {
+                    // Atualizar a visualização do carrinho
+                    updateCartDisplay();
+                }
             }
-        });
+        }
 
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-    });
+        // FUNÇÃO PARA ATUALIZAR A VISUALIZAÇÃO DO CARRINHO
+        function updateCartDisplay() {
+            if (selectedRooms.length === 0) return;
 
-    roomSelectionSection.appendChild(addButton);
-}
+            const quoteResultContainer = document.getElementById('quoteResultContainer');
+            const startDate = selectedRooms[0].startDate;
+            const endDate = selectedRooms[0].endDate;
+            const nights = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
 
-        function askForAdditionalRoom(selectedRoom, startDate, endDate, adults, hasChildren, childAge1, childAge2) {
-            // Verificar disponibilidade antes de adicionar
-            const roomCode = selectedRoom.codigo;
+            // Calcular subtotal
+            let subtotal = 0;
+            let cartItemsHtml = '';
+
+            selectedRooms.forEach((room, index) => {
+                const roomNights = Math.ceil((new Date(room.endDate) - new Date(room.startDate)) / (1000 * 60 * 60 * 24));
+                const total = room.totalPerNight * roomNights;
+                subtotal += total;
+
+                cartItemsHtml += `
+                    <div class="cart-item" style="display: flex; align-items: center; justify-content: space-between; padding: 8px; margin-bottom: 8px; border-bottom: 1px solid #eee; background: white; border-radius: 4px;">
+                        <div class="cart-item-content" style="flex: 1;">
+                            <p style="margin: 0; font-size: 14px;"><strong>${index + 1}. ${room.room.descricao}</strong></p>
+                            <p style="margin: 0; font-size: 12px; color: #666;">${room.adults} adulto(s)${room.hasChildren ? ` + ${room.childrenCount} criança(s)` : ''}</p>
+                            <p style="margin: 0; font-size: 13px; font-weight: 600;">${formatCurrency(total)} (${roomNights} noites)</p>
+                        </div>
+                        <button class="remove-room-btn" onclick="removeRoomFromCart(${index})" style="background-color: #ff4444; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 10px; padding: 0; transition: background-color 0.2s; flex-shrink: 0;">
+                            ×
+                        </button>
+                    </div>
+                `;
+            });
+
             const datesToCheck = getDatesBetween(startDate, endDate);
+            
+            // Calcular disponibilidade restante
+            let availabilityMessage = '<div style="background: #f8f9fa; border-left: 4px solid #075e54; padding: 10px; margin: 10px 0; border-radius: 4px;">';
+            availabilityMessage += '<p style="font-weight: bold; margin-bottom: 5px;">📊 Disponibilidade restante para o período:</p>';
 
-            // Verificar se há disponibilidade para todas as datas
-            const hasAvailability = datesToCheck.every(date => {
-                return currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomCode] &&
-                       currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomCode].diaria[date] > 0;
-            });
-
-            if (!hasAvailability) {
-                const quoteResultContainer = document.getElementById('quoteResultContainer');
-                quoteResultContainer.innerHTML = showError("Não há mais disponibilidade para esta acomodação nas datas selecionadas.").outerHTML;
-                quoteResultContainer.style.display = 'block';
-                return;
-            }
-
-            // Adicionar ao orçamento
-            selectedRooms.push({
-                room: selectedRoom,
-                startDate,
-                endDate,
-                adults,
-                hasChildren,
-                childrenCount: hasChildren ? parseInt(document.getElementById('hasChildren').value) : 0,
-                childAge1,
-                childAge2
-            });
-
-            // Desabilitar campos de data após adicionar a primeira acomodação
-            if (selectedRooms.length === 1) {
-                disableDateInputs();
-            }
-
-            // Atualizar disponibilidade
-            updateAvailabilityAfterSelection(roomCode);
-
-            // Obter disponibilidade atualizada para todas as acomodações
             const roomTypes = [
                 { name: "Apartamento Superior", code: "SUP" },
                 { name: "Suíte Sênior", code: "SEN" },
                 { name: "Suíte Master (Cobertura)", code: "MAS" }
             ];
 
-            // Criar prévia do carrinho de compras
-            let cartPreview = `
-                <div style="background: #f8f9fa; border-left: 4px solid #075e54; padding: 10px; margin: 10px 0; border-radius: 4px;">
-                    <p style="font-weight: bold; margin-bottom: 5px;">🛒 Seu Orçamento Parcial</p>
-                    <div style="max-height: 200px; overflow-y: auto;">
-            `;
-
-            selectedRooms.forEach((room, index) => {
-                const nights = Math.ceil((new Date(room.endDate) - new Date(room.startDate)) / (1000 * 60 * 60 * 24));
-                const total = room.room.valorMedio * nights;
-
-                cartPreview += `
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
-                        <div>
-                            <p style="margin: 0; font-size: 14px;"><strong>${index + 1}. ${room.room.descricao}</strong></p>
-                            <p style="margin: 0; font-size: 12px;">${room.adults} adulto(s)${room.hasChildren ? ` + ${room.childrenCount} criança(s)` : ''}</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <p style="margin: 0; font-size: 14px;">${formatCurrency(total)}</p>
-                            <p style="margin: 0; font-size: 12px;">${nights} noite(s)</p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            cartPreview += `
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
-                        <p style="margin: 0; font-weight: bold;">Subtotal:</p>
-                        <p style="margin: 0; font-weight: bold;">${formatCurrency(selectedRooms.reduce((sum, room) => {
-                            const nights = Math.ceil((new Date(room.endDate) - new Date(room.startDate)) / (1000 * 60 * 60 * 24));
-                            return sum + (room.room.valorMedio * nights);
-                        }, 0))}</p>
-                    </div>
-                </div>
-            `;
-
-            let availabilityMessage = '<div style="background: #f8f9fa; border-left: 4px solid #075e54; padding: 10px; margin: 10px 0; border-radius: 4px;">';
-            availabilityMessage += '<p style="font-weight: bold; margin-bottom: 5px;">📊 Disponibilidade restante para o período:</p>';
-
             roomTypes.forEach(roomType => {
                 const minAvailability = Math.min(
                     ...datesToCheck.map(date => {
-                        const roomData = currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomType.code];
+                        const roomData = currentAvailabilityData?.wsrolRS?.disponibilidadeRS?.disponibilidade?.result[roomType.code];
                         return roomData ? (roomData.diaria[date] || 0) : 0;
                     })
                 );
@@ -2365,66 +2382,83 @@
 
             availabilityMessage += '</div>';
 
-            const questionDiv = document.createElement('div');
+            let questionDiv = document.createElement('div');
+            questionDiv.innerHTML = `
+                <div style="background: #f8f9fa; border-left: 4px solid #075e54; padding: 15px; margin: 10px 0; border-radius: 4px;">
+                    <p style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">🛒 Seu Carrinho</p>
+                    ${cartItemsHtml}
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                        <p style="margin: 0; font-weight: bold; font-size: 16px;">Subtotal:</p>
+                        <p style="margin: 0; font-weight: bold; font-size: 16px;">${formatCurrency(subtotal)}</p>
+                    </div>
+                </div>
+                ${availabilityMessage}
+                <hr style="margin: 15px 0; border: 1px solid rgba(0,0,0,0.1);">
+                <p>Deseja incluir outra acomodação à sua reserva?</p>
+                <div class="quick-actions">
+                    <button class="quick-action" id="addAnotherRoomBtn">Sim, adicionar mais</button>
+                    <button class="quick-action" id="finishReservationBtn">Não, finalizar orçamento</button>
+                </div>
+            `;
 
-            if (roomTypes.every(rt => {
-                const minAvail = Math.min(...datesToCheck.map(date => {
-                    const rd = currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[rt.code];
-                    return rd ? (rd.diaria[date] || 0) : 0;
-                }));
-                return minAvail <= 0;
-            })) {
-                // Caso não haja mais disponibilidade
-                questionDiv.innerHTML = `
-                    ${cartPreview}
-                    <hr style="margin: 15px 0; border: 1px solid rgba(255,255,255,0.3);">
-                    <div style="background: #fff8e1; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                        <p>⚠️ <strong>Não há mais disponibilidade para o período solicitado.</strong></p>
-                        <p>⚠️ <strong>Última unidade disponível para o período solicitado.</strong></p>
-                    </div>
-                    <div class="quick-actions">
-                        <button class="quick-action" id="finishReservationBtn">Gerar Orçamento</button>
-                    </div>
-                `;
-            } else {
-                // Caso ainda haja disponibilidade
-                questionDiv.innerHTML = `
-                    ${cartPreview}
-                    ${availabilityMessage}
-                    <hr style="margin: 15px 0; border: 1px solid rgba(255,255,255,0.3);">
-                    <p>Deseja incluir outra acomodação à sua reserva?</p>
-                    <div class="quick-actions">
-                        <button class="quick-action" id="addAnotherRoomBtn">Sim</button>
-                        <button class="quick-action" id="finishReservationBtn">Não, finalizar</button>
-                    </div>
-                `;
-            }
-
-            const quoteResultContainer = document.getElementById('quoteResultContainer');
             quoteResultContainer.innerHTML = '';
             quoteResultContainer.appendChild(questionDiv);
             quoteResultContainer.style.display = 'block';
 
-            // Configurar listeners dos botões
-            const addAnotherBtn = document.getElementById('addAnotherRoomBtn');
-            if (addAnotherBtn) {
-                addAnotherBtn.addEventListener('click', () => {
-                    quoteResultContainer.style.display = 'none';
-                });
+            // Reatribuir eventos
+            document.getElementById('addAnotherRoomBtn')?.addEventListener('click', () => {
+                quoteResultContainer.style.display = 'none';
+            });
+
+            document.getElementById('finishReservationBtn')?.addEventListener('click', () => {
+                showFinalQuote();
+            });
+        }
+
+        // FUNÇÃO ATUALIZADA PARA USAR OS VALORES JÁ CALCULADOS (simplificada)
+        function askForAdditionalRoom(selectedRoom, startDate, endDate, adults, hasChildren, childAge1, childAge2, childrenCount, extraGuests) {
+            const roomCode = selectedRoom.codigo;
+            const datesToCheck = getDatesBetween(startDate, endDate);
+
+            const hasAvailability = datesToCheck.every(date => {
+                return currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomCode] &&
+                       currentAvailabilityData.wsrolRS.disponibilidadeRS.disponibilidade.result[roomCode].diaria[date] > 0;
+            });
+
+            if (!hasAvailability) {
+                const quoteResultContainer = document.getElementById('quoteResultContainer');
+                quoteResultContainer.innerHTML = showError("Não há mais disponibilidade para esta acomodação nas datas selecionadas.").outerHTML;
+                quoteResultContainer.style.display = 'block';
+                return;
             }
 
-            const finishBtn = document.getElementById('finishReservationBtn');
-            if (finishBtn) {
-                finishBtn.addEventListener('click', () => {
-                    showFinalQuote();
-                });
+            // Usar os valores já calculados que vieram do selectedRoom
+            selectedRooms.push({
+                room: selectedRoom,
+                startDate,
+                endDate,
+                adults,
+                hasChildren,
+                childrenCount: childrenCount,
+                childAge1,
+                childAge2,
+                extraGuests: extraGuests,
+                totalPerNight: selectedRoom.totalPerNight || (selectedRoom.valorMedio + (extraGuests * 102))
+            });
+
+            if (selectedRooms.length === 1) {
+                disableDateInputs();
             }
+
+            updateAvailabilityAfterSelection(roomCode);
+
+            // Atualizar a visualização do carrinho
+            updateCartDisplay();
         }
 
         function updateAvailabilityAfterSelection(roomCode) {
             if (!currentAvailabilityData || !roomCode) return;
 
-            // Registrar estado anterior no histórico
             const beforeUpdate = JSON.parse(JSON.stringify(currentAvailabilityData));
 
             const datesToUpdate = getDatesBetween(
@@ -2439,7 +2473,6 @@
                 }
             });
 
-            // Registrar no histórico
             availabilityHistory.push({
                 timestamp: new Date(),
                 action: `Reserva de ${roomCode}`,
@@ -2447,7 +2480,6 @@
                 after: JSON.parse(JSON.stringify(currentAvailabilityData))
             });
 
-            // Atualizar imediatamente as opções de quarto disponíveis
             updateRoomOptions();
         }
 
@@ -2552,6 +2584,10 @@
                     <button id="whatsappBtn" class="whatsapp-button">
                         ✅ Fechar Reserva via WhatsApp
                     </button>
+                    
+                    <button id="backToCartBtn" class="quote-button" style="background: #666; margin-top: 10px;">
+                        ↩️ Voltar ao carrinho
+                    </button>
                 </div>
             `;
 
@@ -2566,6 +2602,11 @@
             };
 
             setupButtonListeners();
+            
+            // Adicionar evento para voltar ao carrinho
+            document.getElementById('backToCartBtn')?.addEventListener('click', () => {
+                updateCartDisplay();
+            });
         }
 
         function sendQuoteToWhatsApp() {
@@ -2689,9 +2730,7 @@ Atenciosamente,
             }, 1000);
         }
 
-        // ========= FUNÇÃO PRINCIPAL PARA ENVIAR MENSAGENS =========
         async function sendMessage() {
-            // Evitar múltiplos envios simultâneos
             if (isSendingMessage) return;
             
             const input = document.getElementById('messageInput');
@@ -2699,15 +2738,12 @@ Atenciosamente,
 
             if (!message) return;
 
-            // Bloquear novos envios
             isSendingMessage = true;
             
-            // Desabilitar o input e botão durante o processamento
             input.disabled = true;
             const sendButton = document.getElementById('sendButton');
             sendButton.disabled = true;
 
-            // Verificar se é uma mensagem de orçamento/reserva
             const lowerMessage = message.toLowerCase();
             const isQuoteRelated = lowerMessage.includes('orçamento') || 
                                   lowerMessage.includes('preço') || 
@@ -2721,22 +2757,18 @@ Atenciosamente,
             addMessage(message, true);
             input.value = '';
 
-            // SEMPRE mostrar o indicador de digitação
             showTyping();
 
             try {
                 if (isQuoteRelated) {
-                    // Usar o processamento local para orçamentos
-                    await delay(800); // Pequeno delay para dar tempo de ver o "digitando"
+                    await delay(800);
                     const response = generateQuoteForm();
                     hideTyping();
                     addMessage(response);
                 } else {
-                    // Usar a IA para outras perguntas
                     const aiResponse = await callHotelAI(message);
                     hideTyping();
                     
-                    // Usar a função com digitação humana
                     await addMessageWithHumanTyping(aiResponse);
                 }
             } catch (error) {
@@ -2753,17 +2785,14 @@ Atenciosamente,
                     </div>
                 `);
             } finally {
-                // Reabilitar o input e botão
                 input.disabled = false;
                 sendButton.disabled = false;
                 input.focus();
                 
-                // Liberar para novos envios
                 isSendingMessage = false;
             }
         }
 
-        // ========= FUNÇÃO ORIGINAL processUserMessage =========
         async function processUserMessage(message) {
             const lowerMessage = message.toLowerCase();
 
@@ -2853,7 +2882,6 @@ Atenciosamente,
                         </div>
 
                         <div style="padding: 15px;">
-                            <!-- Apartamento Superior -->
                             <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
                                 <div style="display: flex; align-items: center; margin-bottom: 10px;">
                                     <div style="background: #128c7e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
@@ -2889,7 +2917,6 @@ Atenciosamente,
                                 </div>
                             </div>
 
-                            <!-- Suíte Sênior -->
                             <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
                                 <div style="display: flex; align-items: center; margin-bottom: 10px;">
                                     <div style="background: #128c7e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
@@ -2929,7 +2956,6 @@ Atenciosamente,
                                 </div>
                             </div>
 
-                            <!-- Suíte Master -->
                             <div style="margin-bottom: 10px;">
                                 <div style="display: flex; align-items: center; margin-bottom: 10px;">
                                     <div style="background: #128c7e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
@@ -2985,13 +3011,11 @@ Atenciosamente,
                 `;
             }
 
-            // Para perguntas que não sejam sobre reservas/orçamentos, usar a IA
             showTyping();
             try {
                 const aiResponse = await callHotelAI(message);
                 hideTyping();
                 
-                // Usar a nova função com digitação humana
                 await addMessageWithHumanTyping(aiResponse);
                 return aiResponse;
             } catch (error) {
@@ -3008,7 +3032,6 @@ Atenciosamente,
             }
         }
 
-        // ========= FUNÇÃO ORIGINAL handleQuickAction =========
         async function handleQuickAction(action) {
             if (isProcessingQuickAction) return;
             isProcessingQuickAction = true;
@@ -3016,7 +3039,6 @@ Atenciosamente,
             let response = '';
 
             try {
-                // Mostrar indicador de digitação imediatamente
                 showTyping();
 
                 switch(action) {
@@ -3043,7 +3065,6 @@ Atenciosamente,
 
                                     <hr style="border: 0; height: 1px; background: #eee; margin: 15px 0;">
 
-                                    <!-- Apartamento Superior -->
                                     <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
                                         <div style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <div style="background: #128c7e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
@@ -3079,7 +3100,6 @@ Atenciosamente,
                                         </div>
                                     </div>
 
-                                    <!-- Suíte Sênior -->
                                     <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
                                         <div style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <div style="background: #128c7e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
@@ -3119,7 +3139,6 @@ Atenciosamente,
                                         </div>
                                     </div>
 
-                                    <!-- Suíte Master -->
                                     <div style="margin-bottom: 10px;">
                                         <div style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <div style="background: #128c7e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
@@ -3257,11 +3276,9 @@ Atenciosamente,
                 }
 
                 if (response) {
-                    // Aguardar um pouco para mostrar o "digitando"
                     await delay(800);
                     hideTyping();
                     
-                    // Adicionar a resposta
                     await addMessageWithHumanTyping(response);
                     isProcessingQuickAction = false;
                 } else {
@@ -3279,7 +3296,6 @@ Atenciosamente,
             const sendButton = document.getElementById('sendButton');
             const messageInput = document.getElementById('messageInput');
 
-            // Remover listeners antigos
             if (sendButton) {
                 sendButton.removeEventListener('click', sendMessage);
                 sendButton.addEventListener('click', sendMessage);
@@ -3315,10 +3331,8 @@ Atenciosamente,
                 corporateBtn.addEventListener('click', sendCorporateEmail);
             }
 
-            // Configurar ações rápidas
             const quickActions = document.querySelectorAll('.quick-action');
             quickActions.forEach(button => {
-                // Remover listeners antigos clonando e substituindo
                 const newButton = button.cloneNode(true);
                 button.parentNode.replaceChild(newButton, button);
 
@@ -3329,7 +3343,6 @@ Atenciosamente,
                 });
             });
 
-            // Configurar tecla Enter
             if (messageInput) {
                 messageInput.removeEventListener('keypress', handleEnterKey);
                 
@@ -3343,100 +3356,81 @@ Atenciosamente,
             }
         }
 
-        // ===== FUNÇÃO CORRIGIDA: Controle do Modal de Vídeo com reprodução automática =====
-// ===== FUNÇÃO CORRIGIDA: Vídeo inicia em tela cheia automaticamente =====
-let currentVideoElement = null; // Para referência ao vídeo
-
-// Função para abrir o modal com o vídeo
-function openVideoModal(videoFileName) {
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
-    
-    // Constrói o caminho do vídeo. Assumindo que o vídeo está na mesma pasta do HTML.
-    // Use encodeURI para lidar com espaços no nome do arquivo.
-    const videoPath = encodeURI(videoFileName); 
-    
-    // Atualiza a fonte do vídeo
-    const source = video.querySelector('source');
-    source.src = videoPath;
-    video.load(); // Carrega o novo source
-    
-    modal.style.display = 'block';
-    currentVideoElement = video;
-    
-    // Adiciona evento para dar play automático quando o vídeo estiver carregado
-    video.onloadeddata = function() {
-        video.play().catch(error => {
-            console.log('Reprodução automática bloqueada pelo navegador:', error);
-            // Se o navegador bloquear o autoplay, mostra uma mensagem sutil
-            const playMsg = document.createElement('div');
-            playMsg.style.position = 'absolute';
-            playMsg.style.bottom = '10px';
-            playMsg.style.left = '50%';
-            playMsg.style.transform = 'translateX(-50%)';
-            playMsg.style.background = 'rgba(0,0,0,0.7)';
-            playMsg.style.color = 'white';
-            playMsg.style.padding = '8px 16px';
-            playMsg.style.borderRadius = '20px';
-            playMsg.style.fontSize = '14px';
-            playMsg.style.zIndex = '1002';
-            playMsg.innerHTML = '▶️ Clique no vídeo para reproduzir';
+        function openVideoModal(videoFileName) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
             
-            document.querySelector('.modal-content').appendChild(playMsg);
+            const videoPath = encodeURI(videoFileName); 
             
-            // Remove a mensagem após 3 segundos
-            setTimeout(() => {
-                if (playMsg.parentNode) {
-                    playMsg.parentNode.removeChild(playMsg);
+            const source = video.querySelector('source');
+            source.src = videoPath;
+            video.load();
+            
+            modal.style.display = 'block';
+            
+            video.onloadeddata = function() {
+                video.play().catch(error => {
+                    console.log('Reprodução automática bloqueada pelo navegador:', error);
+                    const playMsg = document.createElement('div');
+                    playMsg.style.position = 'absolute';
+                    playMsg.style.bottom = '10px';
+                    playMsg.style.left = '50%';
+                    playMsg.style.transform = 'translateX(-50%)';
+                    playMsg.style.background = 'rgba(0,0,0,0.7)';
+                    playMsg.style.color = 'white';
+                    playMsg.style.padding = '8px 16px';
+                    playMsg.style.borderRadius = '20px';
+                    playMsg.style.fontSize = '14px';
+                    playMsg.style.zIndex = '1002';
+                    playMsg.innerHTML = '▶️ Clique no vídeo para reproduzir';
+                    
+                    document.querySelector('.modal-content').appendChild(playMsg);
+                    
+                    setTimeout(() => {
+                        if (playMsg.parentNode) {
+                            playMsg.parentNode.removeChild(playMsg);
+                        }
+                    }, 3000);
+                });
+                
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
                 }
-            }, 3000);
-        });
-        
-        // NOVO: Solicitar tela cheia automaticamente
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.webkitRequestFullscreen) { /* Safari */
-            video.webkitRequestFullscreen();
-        } else if (video.msRequestFullscreen) { /* IE11 */
-            video.msRequestFullscreen();
+            };
         }
-    };
-}
 
-// Função para fechar o modal
-function closeVideoModal() {
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
-    
-    // Sair do modo tela cheia se estiver ativo
-    if (document.fullscreenElement) {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { /* IE11 */
-            document.msExitFullscreen();
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            
+            if (document.fullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+            
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+            modal.style.display = 'none';
         }
-    }
-    
-    if (video) {
-        video.pause(); // Pausa o vídeo
-        video.currentTime = 0; // Volta ao início
-    }
-    modal.style.display = 'none';
-    currentVideoElement = null;
-}
 
-// Fechar o modal se o usuário clicar fora da área de conteúdo
-window.onclick = function(event) {
-    const modal = document.getElementById('videoModal');
-    if (event.target == modal) {
-        closeVideoModal();
-    }
-}
-// ===== FIM DA FUNÇÃO CORRIGIDA =====
+        window.onclick = function(event) {
+            const modal = document.getElementById('videoModal');
+            if (event.target == modal) {
+                closeVideoModal();
+            }
+        }
 
-        // Iniciar atualização periódica de disponibilidade
         function startAvailabilityRefresh() {
             setInterval(() => {
                 if (currentAvailabilityData && selectedRooms.length > 0) {
@@ -3452,7 +3446,6 @@ window.onclick = function(event) {
                                 currentAvailabilityData = newData;
                                 updateRoomOptions();
 
-                                // Registrar no histórico
                                 availabilityHistory.push({
                                     timestamp: new Date(),
                                     action: 'Atualização periódica de disponibilidade',
@@ -3464,17 +3457,15 @@ window.onclick = function(event) {
                             });
                     }
                 }
-            }, 300000); // Atualiza a cada 5 minutos
+            }, 300000);
         }
 
-        // Inicializar o chat
         document.addEventListener('DOMContentLoaded', function() {
             setupButtonListeners();
             const messageInput = document.getElementById('messageInput');
             if (messageInput) messageInput.focus();
             startAvailabilityRefresh();
             
-            // Testar conexão com a IA
             console.log('Hotel Granja Brasil Assistente inicializado');
             console.log('Endpoint IA: https://intrega-ia.paulo-migueoli.workers.dev/');
         });

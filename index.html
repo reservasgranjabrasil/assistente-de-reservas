@@ -889,6 +889,70 @@
             gap: 8px;
             margin-left: auto;
         }
+
+        /* Melhorias para vídeos em tela cheia */
+        video:-webkit-full-screen {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+
+        video:-moz-full-screen {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+
+        video:-ms-fullscreen {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+
+        video:fullscreen {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+
+        /* Botão de tela cheia para vídeos */
+        .video-fullscreen-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .video-fullscreen-btn:hover {
+            background: rgba(0,0,0,0.8);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .video-container video {
+                object-fit: contain !important;
+                background: black;
+            }
+            
+            .video-container video:fullscreen {
+                object-fit: contain;
+            }
+        }
     </style>
 </head>
 <body>
@@ -956,7 +1020,7 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeVideoModal()">&times;</span>
             <div class="video-container">
-                <video id="modalVideo" controls>
+                <video id="modalVideo" controls playsinline>
                     <source src="" type="video/mp4">
                     Seu navegador não suporta a tag de vídeo.
                 </video>
@@ -3540,6 +3604,7 @@ Atenciosamente,
             }
         }
 
+        // Função aprimorada para abrir vídeo em tela cheia automaticamente
         function openVideoModal(videoFileName) {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('modalVideo');
@@ -3552,52 +3617,115 @@ Atenciosamente,
             
             modal.style.display = 'block';
             
+            // Configurar evento para quando o vídeo estiver pronto
             video.onloadeddata = function() {
-                video.play().catch(error => {
-                    console.log('Reprodução automática bloqueada pelo navegador:', error);
-                    const playMsg = document.createElement('div');
-                    playMsg.style.position = 'absolute';
-                    playMsg.style.bottom = '10px';
-                    playMsg.style.left = '50%';
-                    playMsg.style.transform = 'translateX(-50%)';
-                    playMsg.style.background = 'rgba(0,0,0,0.7)';
-                    playMsg.style.color = 'white';
-                    playMsg.style.padding = '8px 16px';
-                    playMsg.style.borderRadius = '20px';
-                    playMsg.style.fontSize = '14px';
-                    playMsg.style.zIndex = '1002';
-                    playMsg.innerHTML = '▶️ Clique no vídeo para reproduzir';
-                    
-                    document.querySelector('.modal-content').appendChild(playMsg);
-                    
-                    setTimeout(() => {
-                        if (playMsg.parentNode) {
-                            playMsg.parentNode.removeChild(playMsg);
+                // Tenta reproduzir automaticamente
+                video.play()
+                    .then(() => {
+                        console.log('Vídeo reproduzindo automaticamente');
+                        
+                        // Entrar em tela cheia automaticamente
+                        try {
+                            if (video.requestFullscreen) {
+                                video.requestFullscreen();
+                            } else if (video.webkitRequestFullscreen) { // Safari
+                                video.webkitRequestFullscreen();
+                            } else if (video.msRequestFullscreen) { // IE/Edge
+                                video.msRequestFullscreen();
+                            } else if (video.mozRequestFullScreen) { // Firefox
+                                video.mozRequestFullScreen();
+                            } else {
+                                console.log('Tela cheia não suportada neste navegador');
+                                
+                                // Fallback para navegadores sem suporte a fullscreen
+                                const fallbackMsg = document.createElement('div');
+                                fallbackMsg.style.position = 'absolute';
+                                fallbackMsg.style.bottom = '10px';
+                                fallbackMsg.style.left = '50%';
+                                fallbackMsg.style.transform = 'translateX(-50%)';
+                                fallbackMsg.style.background = 'rgba(0,0,0,0.7)';
+                                fallbackMsg.style.color = 'white';
+                                fallbackMsg.style.padding = '8px 16px';
+                                fallbackMsg.style.borderRadius = '20px';
+                                fallbackMsg.style.fontSize = '14px';
+                                fallbackMsg.style.zIndex = '1002';
+                                fallbackMsg.innerHTML = '▶️ Clique no ícone de tela cheia para expandir';
+                                
+                                document.querySelector('.modal-content').appendChild(fallbackMsg);
+                                
+                                setTimeout(() => {
+                                    if (fallbackMsg.parentNode) {
+                                        fallbackMsg.parentNode.removeChild(fallbackMsg);
+                                    }
+                                }, 3000);
+                            }
+                        } catch (fullscreenError) {
+                            console.log('Erro ao entrar em tela cheia:', fullscreenError);
                         }
-                    }, 3000);
-                });
-                
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
+                    })
+                    .catch(error => {
+                        console.log('Reprodução automática bloqueada pelo navegador:', error);
+                        
+                        // Mensagem amigável para reprodução manual
+                        const playMsg = document.createElement('div');
+                        playMsg.style.position = 'absolute';
+                        playMsg.style.bottom = '10px';
+                        playMsg.style.left = '50%';
+                        playMsg.style.transform = 'translateX(-50%)';
+                        playMsg.style.background = 'rgba(0,0,0,0.7)';
+                        playMsg.style.color = 'white';
+                        playMsg.style.padding = '8px 16px';
+                        playMsg.style.borderRadius = '20px';
+                        playMsg.style.fontSize = '14px';
+                        playMsg.style.zIndex = '1002';
+                        playMsg.style.cursor = 'pointer';
+                        playMsg.innerHTML = '▶️ Clique aqui para reproduzir em tela cheia';
+                        
+                        // Adicionar evento de clique para reproduzir e entrar em tela cheia
+                        playMsg.addEventListener('click', function() {
+                            video.play();
+                            if (video.requestFullscreen) {
+                                video.requestFullscreen();
+                            }
+                            this.remove();
+                        });
+                        
+                        document.querySelector('.modal-content').appendChild(playMsg);
+                    });
             };
+            
+            // Garantir que ao sair da tela cheia, o modal ainda funcione
+            video.addEventListener('fullscreenchange', function() {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+                    !document.msFullscreenElement && !document.mozFullScreenElement) {
+                    console.log('Saiu do modo tela cheia');
+                }
+            });
+            
+            video.addEventListener('webkitfullscreenchange', function() {
+                if (!document.webkitFullscreenElement) {
+                    console.log('Saiu do modo tela cheia (Safari)');
+                }
+            });
         }
 
+        // Melhorar a função de fechar modal para garantir que saia da tela cheia
         function closeVideoModal() {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('modalVideo');
             
-            if (document.fullscreenElement) {
+            // Sair da tela cheia se estiver nela
+            if (document.fullscreenElement || document.webkitFullscreenElement || 
+                document.msFullscreenElement || document.mozFullScreenElement) {
+                
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
                 }
             }
             
@@ -3605,11 +3733,13 @@ Atenciosamente,
                 video.pause();
                 video.currentTime = 0;
             }
+            
             modal.style.display = 'none';
             
+            // Pequeno delay para garantir que tudo resetou
             setTimeout(() => {
                 fixVideoButtonLayout();
-            }, 50);
+            }, 100);
         }
 
         window.onclick = function(event) {

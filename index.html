@@ -567,7 +567,6 @@
             text-decoration: underline;
         }
 
-        /* Estilos aprimorados para o modal de vídeo */
         .modal {
             display: none;
             position: fixed;
@@ -909,7 +908,6 @@
             margin-left: auto;
         }
 
-        /* Controles de reprodução de vídeo */
         .video-controls {
             position: absolute;
             bottom: 30px;
@@ -1000,7 +998,6 @@
         </div>
     </div>
 
-    <!-- Modal de Vídeo Aprimorado -->
     <div id="videoModal" class="modal">
         <span class="close-modal" onclick="closeVideoModal()">&times;</span>
         <div class="modal-content">
@@ -1610,14 +1607,16 @@
                 
                 if (i > 0) {
                     showTyping();
-                    await delay(800 + Math.random() * 800);
+                    await delay(500 + Math.random() * 500);
                     hideTyping();
                 }
                 
                 addMessage(part, false);
                 
+                await delay(50); // Pequena pausa para renderização
+                
                 if (i < parts.length - 1) {
-                    await delay(1000 + Math.random() * 1000);
+                    await delay(600 + Math.random() * 400);
                 }
             }
         }
@@ -1662,9 +1661,14 @@
 
             messagesContainer.insertBefore(messageDiv, typingContainer);
 
+            // Scroll suave para a nova mensagem
             setTimeout(() => {
-                messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 50);
+                messageDiv.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest',
+                    inline: 'nearest'
+                });
+            }, 10);
 
             conversationHistory.push({
                 content: typeof content === 'string' ? content : content.outerHTML,
@@ -1678,13 +1682,26 @@
             }, 50);
         }
 
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            if (messagesContainer) {
+                messagesContainer.scrollTo({
+                    top: messagesContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
         function showTyping() {
             const typingContainer = document.getElementById('typingContainer');
             if (typingContainer) {
                 typingContainer.style.display = 'flex';
                 setTimeout(() => {
-                    typingContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 50);
+                    typingContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest'
+                    });
+                }, 10);
             }
         }
 
@@ -3509,18 +3526,17 @@ Atenciosamente,
                 }
 
                 if (response) {
-                    await delay(800);
+                    await delay(800); // pequena pausa para simular digitação
                     hideTyping();
-                    
-                    await addMessageWithHumanTyping(response);
-                    isProcessingQuickAction = false;
+                    // Para ações rápidas, usamos addMessage diretamente, sem dividir em partes
+                    addMessage(response);
                 } else {
                     hideTyping();
-                    isProcessingQuickAction = false;
                 }
             } catch (error) {
                 console.error('Erro ao processar ação rápida:', error);
                 hideTyping();
+            } finally {
                 isProcessingQuickAction = false;
             }
         }
@@ -3589,65 +3605,47 @@ Atenciosamente,
             }
         }
 
-        // Função aprimorada para abrir o modal de vídeo
         function openVideoModal(videoFileName) {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('modalVideo');
             
-            // Codifica o nome do arquivo para URL
             const videoPath = encodeURI(videoFileName);
             
-            // Atualiza a fonte do vídeo
             const source = video.querySelector('source');
             source.src = videoPath;
-            
-            // Recarrega o vídeo
             video.load();
             
-            // Exibe o modal
             modal.style.display = 'block';
-            
-            // Previne rolagem do body
             document.body.style.overflow = 'hidden';
             
-            // Tenta reproduzir automaticamente
             video.play().catch(error => {
                 console.log('Reprodução automática bloqueada:', error);
             });
             
-            // Ajusta o vídeo para ocupar todo o modal
             video.style.width = '100%';
             video.style.height = '100%';
             video.style.objectFit = 'contain';
             
-            // Força reflow para garantir que o vídeo se ajuste
             setTimeout(() => {
                 video.style.width = '100%';
                 video.style.height = '100%';
             }, 100);
         }
 
-        // Função para fechar o modal de vídeo
         function closeVideoModal() {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('modalVideo');
             
-            // Para o vídeo e reseta
             video.pause();
             video.currentTime = 0;
             
-            // Esconde o modal
             modal.style.display = 'none';
-            
-            // Restaura rolagem do body
             document.body.style.overflow = '';
             
-            // Libera recursos
             video.removeAttribute('src');
             video.load();
         }
 
-        // Fechar modal com clique fora do vídeo
         window.onclick = function(event) {
             const modal = document.getElementById('videoModal');
             if (event.target == modal) {
@@ -3655,7 +3653,6 @@ Atenciosamente,
             }
         }
 
-        // Fechar modal com tecla ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeVideoModal();
@@ -3795,7 +3792,6 @@ Atenciosamente,
             });
         }
 
-        // Observador para manter o layout correto
         const observer = new MutationObserver(function(mutations) {
             let shouldFix = false;
             
@@ -3852,6 +3848,31 @@ Atenciosamente,
             const messageInput = document.getElementById('messageInput');
             if (messageInput) messageInput.focus();
             startAvailabilityRefresh();
+
+            // Observer para scroll automático quando novas mensagens são adicionadas
+            const messagesContainer = document.getElementById('chatMessages');
+            const scrollObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        const addedNode = mutation.addedNodes[0];
+                        if (addedNode && !addedNode.classList?.contains('typing-message')) {
+                            setTimeout(() => {
+                                addedNode.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'nearest'
+                                });
+                            }, 50);
+                        }
+                    }
+                });
+            });
+            
+            if (messagesContainer) {
+                scrollObserver.observe(messagesContainer, { 
+                    childList: true, 
+                    subtree: false 
+                });
+            }
             
             console.log('Hotel Granja Brasil Assistente inicializado');
             console.log('Endpoint IA: https://intrega-ia.paulo-migueoli.workers.dev/');

@@ -567,65 +567,76 @@
             text-decoration: underline;
         }
 
+        /* Estilos aprimorados para o modal de vídeo */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 10000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            backdrop-filter: blur(3px);
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
             position: relative;
-            margin: auto;
+            margin: 0 auto;
             padding: 0;
-            width: 90%;
-            max-width: 800px;
-            top: 50%;
-            transform: translateY(-50%);
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
             background-color: transparent;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border-radius: 8px;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .video-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: #000;
         }
 
         .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
             outline: none;
-            display: block;
         }
 
         .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: #f1f1f1;
-            font-size: 40px;
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 50px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 1001;
+            z-index: 10001;
             line-height: 1;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            transition: all 0.3s ease;
         }
 
         .close-modal:hover {
-            color: #bbb;
+            color: #fff;
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
         }
 
         .accommodation-item {
@@ -762,6 +773,14 @@
                 width: 100% !important;
                 justify-content: center !important;
             }
+
+            .close-modal {
+                top: 10px;
+                right: 10px;
+                font-size: 40px;
+                width: 50px;
+                height: 50px;
+            }
         }
 
         @media (min-width: 768px) {
@@ -889,6 +908,35 @@
             gap: 8px;
             margin-left: auto;
         }
+
+        /* Controles de reprodução de vídeo */
+        .video-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 50px;
+            z-index: 10002;
+        }
+
+        .video-control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .video-control-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 <body>
@@ -952,11 +1000,12 @@
         </div>
     </div>
 
+    <!-- Modal de Vídeo Aprimorado -->
     <div id="videoModal" class="modal">
+        <span class="close-modal" onclick="closeVideoModal()">&times;</span>
         <div class="modal-content">
-            <span class="close-modal" onclick="closeVideoModal()">&times;</span>
             <div class="video-container">
-                <video id="modalVideo" controls>
+                <video id="modalVideo" controls playsinline>
                     <source src="" type="video/mp4">
                     Seu navegador não suporta a tag de vídeo.
                 </video>
@@ -3540,84 +3589,78 @@ Atenciosamente,
             }
         }
 
+        // Função aprimorada para abrir o modal de vídeo
         function openVideoModal(videoFileName) {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('modalVideo');
             
-            const videoPath = encodeURI(videoFileName); 
+            // Codifica o nome do arquivo para URL
+            const videoPath = encodeURI(videoFileName);
             
+            // Atualiza a fonte do vídeo
             const source = video.querySelector('source');
             source.src = videoPath;
+            
+            // Recarrega o vídeo
             video.load();
             
+            // Exibe o modal
             modal.style.display = 'block';
             
-            video.onloadeddata = function() {
-                video.play().catch(error => {
-                    console.log('Reprodução automática bloqueada pelo navegador:', error);
-                    const playMsg = document.createElement('div');
-                    playMsg.style.position = 'absolute';
-                    playMsg.style.bottom = '10px';
-                    playMsg.style.left = '50%';
-                    playMsg.style.transform = 'translateX(-50%)';
-                    playMsg.style.background = 'rgba(0,0,0,0.7)';
-                    playMsg.style.color = 'white';
-                    playMsg.style.padding = '8px 16px';
-                    playMsg.style.borderRadius = '20px';
-                    playMsg.style.fontSize = '14px';
-                    playMsg.style.zIndex = '1002';
-                    playMsg.innerHTML = '▶️ Clique no vídeo para reproduzir';
-                    
-                    document.querySelector('.modal-content').appendChild(playMsg);
-                    
-                    setTimeout(() => {
-                        if (playMsg.parentNode) {
-                            playMsg.parentNode.removeChild(playMsg);
-                        }
-                    }, 3000);
-                });
-                
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
-            };
+            // Previne rolagem do body
+            document.body.style.overflow = 'hidden';
+            
+            // Tenta reproduzir automaticamente
+            video.play().catch(error => {
+                console.log('Reprodução automática bloqueada:', error);
+            });
+            
+            // Ajusta o vídeo para ocupar todo o modal
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'contain';
+            
+            // Força reflow para garantir que o vídeo se ajuste
+            setTimeout(() => {
+                video.style.width = '100%';
+                video.style.height = '100%';
+            }, 100);
         }
 
+        // Função para fechar o modal de vídeo
         function closeVideoModal() {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('modalVideo');
             
-            if (document.fullscreenElement) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
+            // Para o vídeo e reseta
+            video.pause();
+            video.currentTime = 0;
             
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-            }
+            // Esconde o modal
             modal.style.display = 'none';
             
-            setTimeout(() => {
-                fixVideoButtonLayout();
-            }, 50);
+            // Restaura rolagem do body
+            document.body.style.overflow = '';
+            
+            // Libera recursos
+            video.removeAttribute('src');
+            video.load();
         }
 
+        // Fechar modal com clique fora do vídeo
         window.onclick = function(event) {
             const modal = document.getElementById('videoModal');
             if (event.target == modal) {
                 closeVideoModal();
             }
         }
+
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
 
         function startAvailabilityRefresh() {
             setInterval(() => {
@@ -3752,18 +3795,7 @@ Atenciosamente,
             });
         }
 
-        const originalCloseVideoModal = window.closeVideoModal;
-        window.closeVideoModal = function() {
-            if (originalCloseVideoModal) {
-                originalCloseVideoModal();
-            }
-            
-            setTimeout(fixVideoButtonLayout, 10);
-            setTimeout(fixVideoButtonLayout, 50);
-            setTimeout(fixVideoButtonLayout, 100);
-            setTimeout(fixVideoButtonLayout, 200);
-        };
-
+        // Observador para manter o layout correto
         const observer = new MutationObserver(function(mutations) {
             let shouldFix = false;
             

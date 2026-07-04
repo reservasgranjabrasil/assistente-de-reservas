@@ -2852,55 +2852,56 @@
         }
 
         function sendQuoteToWhatsApp() {
-            if (!currentQuoteData) return;
+    if (!currentQuoteData) return;
 
-            const customerName = document.getElementById('customerName').value;
-            if (!customerName) {
-                alert('Por favor, informe seu nome completo para prosseguir com a reserva.');
-                return;
-            }
+    // 🔥 DISPARAR CONVERSÃO DO GOOGLE ADS
+    gtag('event', 'conversion', {
+        'send_to': 'AW-410194714/pLMPCOvx6socEJqmzMMB'
+    });
 
-            currentQuoteData.customerName = customerName;
+    const customerName = document.getElementById('customerName').value;
+    if (!customerName) {
+        alert('Por favor, informe seu nome completo para prosseguir com a reserva.');
+        return;
+    }
 
-            let roomsDescription = '';
-            currentQuoteData.rooms.forEach((reservation, index) => {
-                const room = reservation.room;
-                const adults = reservation.adults;
-                const hasChildren = reservation.hasChildren;
-                const childrenCount = reservation.childrenCount;
-                const childAge1 = reservation.childAge1;
-                const childAge2 = reservation.childrenCount === 2 ? reservation.childAge2 : 0;
+    currentQuoteData.customerName = customerName;
 
-                let extraGuestMessage = '';
-                if (hasChildren) {
-                    const totalPayingGuests = adults + (childAge1 > 6 ? 1 : 0) + (childrenCount === 2 && childAge2 > 6 ? 1 : 0);
+    let roomsDescription = '';
+    currentQuoteData.rooms.forEach((reservation, index) => {
+        const room = reservation.room;
+        const adults = reservation.adults;
+        const hasChildren = reservation.hasChildren;
+        const childrenCount = reservation.childrenCount;
+        const childAge1 = reservation.childAge1;
+        const childAge2 = reservation.childrenCount === 2 ? reservation.childAge2 : 0;
 
-                    if (totalPayingGuests > 2) {
-                        const extraGuests = totalPayingGuests - 2;
-                        const extraGuestFee = 102 * currentQuoteData.nights * extraGuests;
-
-                        const childAges = [];
-                        if (childAge1 > 6) childAges.push(childAge1);
-                        if (childrenCount === 2 && childAge2 > 6) childAges.push(childAge2);
-
-                        if (childAges.length > 0) {
-                            extraGuestMessage = `\n👶 *Criança(s) (${childAges.join(' e ')} anos):* ${formatCurrency(extraGuestFee)} (hóspede extra)`;
-                        }
-                    }
-                } else if (adults > 2) {
-                    const extraGuestFee = 102 * currentQuoteData.nights;
-                    extraGuestMessage = `\n👥 *Hóspede extra:* ${formatCurrency(extraGuestFee)}`;
+        let extraGuestMessage = '';
+        if (hasChildren) {
+            const totalPayingGuests = adults + (childAge1 > 6 ? 1 : 0) + (childrenCount === 2 && childAge2 > 6 ? 1 : 0);
+            if (totalPayingGuests > 2) {
+                const extraGuests = totalPayingGuests - 2;
+                const extraGuestFee = 102 * currentQuoteData.nights * extraGuests;
+                const childAges = [];
+                if (childAge1 > 6) childAges.push(childAge1);
+                if (childrenCount === 2 && childAge2 > 6) childAges.push(childAge2);
+                if (childAges.length > 0) {
+                    extraGuestMessage = `\n👶 *Criança(s) (${childAges.join(' e ')} anos):* ${formatCurrency(extraGuestFee)} (hóspede extra)`;
                 }
+            }
+        } else if (adults > 2) {
+            const extraGuestFee = 102 * currentQuoteData.nights;
+            extraGuestMessage = `\n👥 *Hóspede extra:* ${formatCurrency(extraGuestFee)}`;
+        }
 
-                roomsDescription += `
+        roomsDescription += `
 🏨 *Acomodação ${index + 1}:* ${room.descricao}
 👥 *Hóspedes:* ${adults} adulto(s)${hasChildren ? ` + ${childrenCount} criança(s) (${childAge1}${childrenCount === 2 ? ` e ${childAge2}` : ''} anos)` : ''}
 💰 *Diária:* ${formatCurrency(room.valorMedio)}${extraGuestMessage}
-
 `;
-            });
+    });
 
-            const message = `
+    const message = `
 🏨 *SOLICITAÇÃO DE RESERVA - HOTEL GRANJA BRASIL*
 
 👤 *Cliente:* ${currentQuoteData.customerName}
@@ -2916,11 +2917,10 @@ ${roomsDescription}
 • *TOTAL: ${formatCurrency(currentQuoteData.total)}*
 
 📝 Cliente interessado em fechar a reserva!
-            `.trim();
+    `.trim();
 
-            openWhatsApp(message);
-        }
-
+    openWhatsApp(message);
+}
         function formatDisplayDate(dateString) {
             const date = new Date(dateString);
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
